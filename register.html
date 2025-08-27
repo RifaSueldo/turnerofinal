@@ -219,16 +219,17 @@
           
   msg.style.color = "white";
   msg.innerHTML = `
-    Cuenta creada con éxito. Tu sitio es: <strong>www.turnoxok.netlify.app/${data.username.toLowerCase()}</strong><br>
+    
     Tu Usuario es:<strong> ${data.email}</strong><br>
-    Enviamos un mail con los datos a:<strong> ${data.email}</strong><br>
-    Agregamos créditos gratis a tu cuenta:<strong> 5 créditos</strong> para prueba.<br>
+    Cargamos:<strong> 5 créditos</strong> gratis en tu cuenta.<br>
     
     <button id="ingresarPanel" style="margin-top:10px; padding:8px 16px; cursor:pointer;">Ir a tu sitio.</button>
   `;
-  document.getElementById("ingresarPanel").onclick = () => {
-    window.location.href = `https://turnoxok.netlify.app/${encodeURIComponent(data.username.toLowerCase())}`;
-  };
+ document.getElementById("ingresarPanel").onclick = () => {
+  const username = encodeURIComponent(data.username.toLowerCase());
+  window.location.href = `https://turnox.pro/creditos.html?user=${username}`;
+};
+
 
 
         } else {
