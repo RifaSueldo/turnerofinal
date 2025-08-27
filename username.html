@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>TurnoX - Sistema PRE-PAGO de Turnos On Line</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+  <!-- Fuentes -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+ 
+
+  <!-- Iconos -->
+  <link rel="icon" type="image/png" href="https://i.ibb.co/p6Ycq6XC/Turnox-logo.png">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+
+  <!-- Open Graph para WhatsApp/Facebook -->
+  <meta property="og:title" content=">TurnoX - Sistema PRE-PAGO de Turnos On Line" />
+  <meta property="og:description" content="Turnero Pro." />
+  <meta property="og:image" content="https://i.ibb.co/p6Ycq6XC/Turnox-logo.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:url" content="https://turnox.pro/" />
+  <meta property="og:type" content="website" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="TurnoX - Sistema PRE-PAGO de Turnos On Line" />
+  <meta name="twitter:description" content="Turnero Pro." />
+  <meta name="twitter:image" content="https://i.ibb.co/p6Ycq6XC/Turnox-logo.png" />
+   <style>
+    html {
+  scroll-behavior: smooth;
+}
+   body {
+  font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  margin: 0;
+  padding: 0;
+  background-color: #533482;
+     color: #F2F2F2;
+    }
+  h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 2rem;
+  }
+
+  
+
+  /* Calendario */
+  #calendario {
+   margin: 100px auto 10px auto; /* arriba - lados - abajo - lados */
+  max-width: 600px;             /* ancho máximo */
+  width: 100%;  
+    background: 
+        linear-gradient(
+            135deg,
+            #D2B8FF 0%, 
+            #fff 25%, 
+            #F4EDFF 50%, 
+            #fff 75%, 
+            #D2B8FF 100%
+        ),
+        repeating-linear-gradient(
+            0deg,
+            rgba(255,255,255,0.05) 0px,
+            rgba(255,255,255,0.05) 2px,
+            transparent 2px,
+            transparent 4px
+        );
+   
+    background-blend-mode: overlay;
+  color: #533482; 
+    
+    border-radius: 0px;
+    overflow: hidden;
+    padding: 15px;
+  }
+  #calendario h2 { text-align: center; margin-bottom: 10px; text-transform: capitalize; }
+  #calendario table { width: 100%; border-collapse: collapse; }
+  #calendario th, #calendario td { width: 14.28%; text-align: center; padding: 10px 0; }
+  #calendario td:hover { border-color: #575757; cursor: pointer; border-radius: 0%; }
+  #calendario td[style*="not-allowed"] { cursor: not-allowed; color: #999; }
+#calendario td.hoy {
+  border: 2px solid #575757;
+  border-radius: 0%;
+}
+
+#calendario td.seleccionado {
+  background-color: #533482;
+  color: #fff;
+  border-radius: 0%;
+}
+
+#calendario td.bloqueado {
+  cursor: not-allowed;
+  color: #999;
+  pointer-events: none;
+}
+#turnos {
+  text-align: center;
+ 
+}
+  /* Turnos */
+  .turnos {
+    margin: 15px auto;
+    max-width: 600px;
+    text-align: center;
+    background: #ffffff;
+    color: #533482;
+    padding: 15px;
+     background: 
+        linear-gradient(
+            135deg,
+            #D2B8FF 0%, 
+            #fff 25%, 
+            #F4EDFF 50%, 
+            #fff 75%, 
+            #D2B8FF 100%
+        ),
+        repeating-linear-gradient(
+            0deg,
+            rgba(255,255,255,0.05) 0px,
+            rgba(255,255,255,0.05) 2px,
+            transparent 2px,
+            transparent 4px
+        );
+   
+    background-blend-mode: overlay;
+  }
+  .turnos h3 { margin-bottom: 10px; }
+  .hora { display: inline-block; margin: 5px; padding: 8px 12px; border-radius: 0px; font-weight: 600; transition: all 0.2s; }
+  .hora.disponible { background: #F7F7F7; color: #533482; }
+  .hora.disponible:hover { background: #533482; color: #fff;  cursor: pointer; transform: translateY(-2px); }
+  .hora.bloqueado { background: #D2B8FF95; color: #F7F7F7; cursor: not-allowed; text-decoration: line-through; opacity: 0.6; }
+.hora.selected {
+  background-color: #533482; /* fondo del seleccionado */
+  color: #fff;               /* texto */
+  transform: translateY(-2px);
+}
+ /* Formulario de reserva */
+#reservaFormContainer {
+  margin: 20px auto;
+  max-width: 600px;
+  background: 
+      linear-gradient(
+          135deg,
+          #D2B8FF 0%, 
+          #fff 25%, 
+          #F4EDFF 50%, 
+          #fff 75%, 
+          #D2B8FF 100%
+      ),
+      repeating-linear-gradient(
+          0deg,
+          rgba(255,255,255,0.05) 0px,
+          rgba(255,255,255,0.05) 2px,
+          transparent 2px,
+          transparent 4px
+      );
+  background-blend-mode: overlay;
+  color: #533482;
+  padding: 20px;
+  border-radius: 0px; /* sin bordes redondeados */
+  text-align: center; /* todo centrado */
+}
+
+#reservaForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* centra inputs y botones */
+}
+
+#reservaForm input,
+#reservaForm textarea,
+#reservaForm button {
+  width: 90%;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 0px; /* sin bordes redondeados */
+  border: 1px solid #ccc;
+  font-family: 'Montserrat', sans-serif;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+#reservaForm button {
+  background-color: #533482;
+  color: #fff;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+#reservaForm button:hover {
+  background-color: #452a7a;
+  transform: translateY(-2px);
+}
+
+#reservaMsg {
+  margin-top: 10px;
+  text-align: center;
+  font-weight: 600;
+}
+
+@media(max-width: 650px){
+  #calendario,
+  .turnos,
+  #reservaFormContainer {
+    width: 95%;
+    padding: 10px;
+  }
+  .hora {
+    padding: 6px 10px;
+    font-size: 0.9rem;
+  }
+}
+#reservaForm label i {
+  font-family: "Font Awesome 6 Free"; /* fuerza la fuente FA */
+  font-weight: 900; /* necesario para los sólidos (fas) */
+  margin-right: 5px; /* separación del texto */
+  display: inline-block;
+  vertical-align: middle;
+  color: inherit; /* hereda color del label */
+}
+
+#reservaForm label {
+  display: flex;
+  align-items: center;
+}
+    .ticket {
+      font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  margin: 20px auto;
+  max-width: 500px;
+  background: 
+        linear-gradient(
+            135deg,
+            #D2B8FF 0%, 
+            #fff 25%, 
+            #F4EDFF 50%, 
+            #fff 75%, 
+            #D2B8FF 100%
+        ),
+        repeating-linear-gradient(
+            0deg,
+            rgba(255,255,255,0.05) 0px,
+            rgba(255,255,255,0.05) 2px,
+            transparent 2px,
+            transparent 4px
+        );
+   
+    background-blend-mode: overlay;
+  color: #333;
+  padding: 20px;
+  border-radius: 0px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  text-align: left;
+}
+.ticket h2 {
+  font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  text-align: center;
+  color: #533482;
+  margin-bottom: 15px;
+}
+.ticket p {
+  font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  margin: 6px 0;
+  font-size: 0.95rem;
+}
+.ticket button {
+  font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  margin-top: 15px;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 0px;
+  background: #533482;
+  color: #fff;
+  cursor: pointer;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+.ticket button:hover {
+  background: #452a7a;
+}
+
+#floatingLogo {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  margin-left: 5px;
+  max-width: 60%;            /* nunca supere el 60% del ancho del header */
+  transition: transform 0.9s ease;
+  transform: translateX(-150px); /* empieza fuera de pantalla */
+}
+
+#floatingLogo img {
+  max-height: 60px;
+  max-width: 100%;
+  object-fit: contain;
+  display: block;
+}
+header {
+      position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 70px;              
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 10px;
+  box-sizing: border-box;
+  z-index: 1000;
+       background: 
+        linear-gradient(
+            135deg,
+            #D2B8FF 0%, 
+            #fff 25%, 
+            #F4EDFF 50%, 
+            #fff 75%, 
+            #D2B8FF 100%
+        ),
+        repeating-linear-gradient(
+            0deg,
+            rgba(255,255,255,0.05) 0px,
+            rgba(255,255,255,0.05) 2px,
+            transparent 2px,
+            transparent 4px
+        );
+   
+    background-blend-mode: overlay;
+      
+    }
+     /* Botón Login */
+    .login-btn {
+      padding: 8px 16px;
+      background-color: #575757;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 14px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.3s ease;
+    }
+
+    .login-btn:hover {
+      background-color: #533482;
+    }
+     
+</style>
+
+</head>
+<body>
+ <header>
+  <!-- Logo del usuario -->
+<div id="floatingLogo">
+  <div class="logo-container">
+  <img id="userLogo"></div>
+</div>
+   <!-- Botón Login -->
+    <a href="login.html" class="login-btn">Login</a>
+ </header>
+  
+
+  
+
+  <div id="calendario"></div>
+<div style="display:flex; gap:20px; align-items:center; justify-content:center;">
+  <!-- Botón Mes anterior -->
+  <button id="prevMonth" style="display:flex; align-items:center; gap:6px; padding:0; background:none; border:none; color:#F4EDFF; cursor:pointer; font-size:16px;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="18" viewBox="0 0 60 24" fill="none" stroke="#F4EDFF" stroke-width="2" stroke-linecap="butt" stroke-linejoin="miter">
+      <line x1="58" y1="12" x2="8" y2="12"></line>
+      <polyline points="16,4 2,12 16,20"></polyline>
+    </svg>
+    Mes anterior
+  </button>
+
+  <!-- Botón Mes siguiente -->
+  <button id="nextMonth" style="display:flex; align-items:center; gap:6px; padding:0; background:none; border:none; color:#F4EDFF; cursor:pointer; font-size:16px;">
+    Mes siguiente
+    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="18" viewBox="0 0 60 24" fill="none" stroke="#F4EDFF" stroke-width="2" stroke-linecap="butt" stroke-linejoin="miter">
+      <line x1="2" y1="12" x2="52" y2="12"></line>
+      <polyline points="44,4 58,12 44,20"></polyline>
+    </svg>
+  </button>
+</div>
+
+
+  <div id="turnos"></div>
+  <div id="reservaFormContainer" style="display:none;">
+ 
+  
+
+    
+  </div>
+
+
+<!-- Nuevo: ticket fijo -->
+<div id="ticketContainer"></div>
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbwSHPQD3ZXVqMpPZ1E2cA9_ELs8hxScPkeEs5ReZ-_MwqZ9Wt3qvIgGy6pVk6STCebKBw/exec";
+
+// ------------------ OBTENER USERNAME ------------------
+let params = new URLSearchParams(window.location.search);
+let username = params.get("username");
+let userId = params.get("userId"); // opcional si lo pasás por URL
+
+if (!username) {
+  let path = window.location.pathname.replace(/\/+$/, "");
+  const lastSegment = path.substring(path.lastIndexOf("/") + 1);
+  if (lastSegment && lastSegment !== "username.html") username = lastSegment;
+}
+if (!username) alert("Falta username en la URL");
+
+// ------------------ VARIABLES GLOBALES ------------------
+let selectedDate;      // Fecha seleccionada
+let turnosData = {};   // Turnos cargados
+let profesionales = {}; 
+let selectedProfId = null;
+let selectedProf = "";
+let selectedHora = "";
+
+
+// ------------------ CARGAR LOGO ------------------
+  async function cargarLogo(username) {
+  try {
+    // pedimos al backend los datos del perfil
+    const res = await fetch(`${API_URL}?action=getPerfil&username=${username}`);
+    const perfil = await res.json();
+
+    console.log("Perfil recibido del backend:", perfil);
+
+    if (perfil.status === "ok") {
+      let logoUrl = perfil.logo || "https://i.ibb.co/p6Ycq6XC/Turnox-logo.png";
+
+      // Si es un link de Drive tipo "https://drive.google.com/file/d/ID/view?usp=..."
+      const driveMatch = logoUrl.match(/\/d\/([a-zA-Z0-9_-]+)\//);
+      if (driveMatch) {
+        const fileId = driveMatch[1];
+        // Transformamos en enlace directo compatible con <img>
+        logoUrl = `https://drive.google.com/uc?export=view&id=${fileId}`;
+      }
+
+      const logo = document.getElementById("userLogo");
+      logo.src = logoUrl;
+    } else {
+      console.log("No se encontró perfil para", username);
+    }
+  } catch (e) {
+    console.log("Error cargando logo:", e);
+  }
+}
+
+
+// ------------------ RENDER CALENDARIO ------------------
+function renderCalendario(year, month) {
+  const today = new Date();
+  const firstDay = new Date(year, month, 1);
+  const lastDay = new Date(year, month + 1, 0);
+  const calendarDiv = document.getElementById("calendario");
+  calendarDiv.innerHTML = `<h2>${firstDay.toLocaleString("es-ES",{month:"long", year:"numeric"})}</h2>`;
+
+  let table = "<table><tr>";
+  const diasSemana = ["Dom","Lun","Mar","Mié","Jue","Vie","Sáb"];
+  diasSemana.forEach(d => table += `<th>${d}</th>`);
+  table += "</tr><tr>";
+
+  for (let i = 0; i < firstDay.getDay(); i++) table += "<td></td>";
+
+  for (let d = 1; d <= lastDay.getDate(); d++) {
+    const fecha = new Date(year, month, d);
+    const fechaStr = fecha.toISOString().split("T")[0];
+
+    let clases = "";
+
+    // marcar día bloqueado (no se puede clickear)
+    if (fecha < new Date(today.getFullYear(), today.getMonth(), today.getDate())) {
+      clases = "bloqueado";
+      table += `<td class="${clases}">${d}</td>`;
+    } else {
+      // marcar día de hoy
+      if (
+        fecha.getFullYear() === today.getFullYear() &&
+        fecha.getMonth() === today.getMonth() &&
+        fecha.getDate() === today.getDate()
+      ) {
+        clases += (clases ? " " : "") + "hoy";
+      }
+
+      table += `<td class="${clases}" onclick="seleccionarDia(this, '${fechaStr}')">${d}</td>`;
+    }
+
+    if (fecha.getDay() === 6 && d !== lastDay.getDate()) table += "</tr><tr>";
+  }
+
+  table += "</tr></table>";
+  calendarDiv.innerHTML += table;
+
+  // botones mes anterior/siguiente
+  document.getElementById("prevMonth").onclick = () => {
+    renderCalendario(year, month - 1);
+  };
+  document.getElementById("nextMonth").onclick = () => {
+    renderCalendario(year, month + 1);
+  };
+}
+
+// ------------------ SELECCIONAR DÍA ------------------
+function seleccionarDia(td, fechaStr) {
+  // quitar selección anterior
+  document.querySelectorAll("#calendario td.seleccionado").forEach(el => el.classList.remove("seleccionado"));
+  // marcar día seleccionado
+  td.classList.add("seleccionado");
+  // cargar turnos
+  cargarTurnos(fechaStr);
+}
+
+// ------------------ CARGAR TURNOS ------------------
+async function cargarTurnos(fechaStr) {
+  selectedDate = new Date(fechaStr + "T00:00:00");
+  const fechaBonita = selectedDate.toLocaleDateString("es-ES", {
+    day: "numeric",
+    month: "long",
+    year: "numeric"
+  });
+
+  const turnosDiv = document.getElementById("turnos");
+  turnosDiv.innerHTML = `<h2> ${fechaBonita}</h2><p>Cargando...</p>`;
+  document.getElementById("reservaFormContainer").style.display = "none";
+
+  try {
+    const res = await fetch(`${API_URL}?username=${username}&fecha=${fechaStr}`);
+    const data = await res.json();
+
+    if (data.status !== "ok") {
+      turnosDiv.innerHTML = `
+        <h2> ${fechaBonita}</h2>
+        <p style="color:red;">Error al cargar: ${data.msg || "Error desconocido"}</p>
+      `;
+      return;
+    }
+
+    turnosData = data.turnos;
+    profesionales = data.profesionales;
+
+    let html = "";
+
+    if (!turnosData || Object.keys(turnosData).length === 0) {
+      html += `<div class="turnos"><p>No hay turnos configurados para esta fecha</p></div>`;
+    } else {
+      Object.keys(turnosData).forEach(profId => {
+        const profObj = turnosData[profId];
+        html += `<div class="turnos"><h3>${profObj.nombre}</h3>`;
+        if (!profObj.turnos || profObj.turnos.length === 0) {
+          html += "<p>No hay turnos disponibles</p>";
+        } else {
+          profObj.turnos.forEach(t => {
+            const clase = t.estado === "bloqueado" ? "bloqueado" : "disponible";
+            const horaFormateada = t.hora.padStart(5, "0");
+            html += `<span 
+                        class="hora ${clase}" 
+                        data-profid="${profId}" 
+                        data-hora="${horaFormateada}">
+                        ${horaFormateada}
+                     </span>`;
+          });
+        }
+        html += `</div>`;
+      });
+    }
+
+    turnosDiv.innerHTML = html;
+
+    // 🔽 Agregamos los listeners a las horas disponibles
+    document.querySelectorAll(".hora.disponible").forEach(span => {
+      span.addEventListener("click", () => {
+        seleccionarTurno(span.dataset.profid, span.dataset.hora);
+      });
+    });
+
+  } catch (err) {
+    console.error("Error cargando turnos:", err);
+    turnosDiv.innerHTML = `
+      <h2> ${fechaBonita}</h2>
+      <p style="color:red;">No se pudieron cargar los turnos.</p>
+    `;
+  }
+}
+
+// ------------------ SELECCIONAR TURNO ------------------
+function seleccionarTurno(profId, hora) {
+  selectedProfId = profId;
+  selectedProf = turnosData[profId].nombre;
+  selectedHora = hora;
+
+  // Quitar clase selected de cualquier hora previamente seleccionada
+  document.querySelectorAll(".hora.disponible").forEach(el => el.classList.remove("selected"));
+
+  // Agregar clase selected a la hora clickeada
+  const span = document.querySelector(`.hora.disponible[data-profid="${profId}"][data-hora="${hora}"]`);
+  if (span) span.classList.add("selected");
+
+  mostrarFormReserva(selectedProfId, selectedHora);
+}
+
+
+// ------------------ MOSTRAR FORMULARIO ------------------
+function mostrarFormReserva(profId, hora) {
+  const fechaStr = selectedDate.toISOString().split("T")[0];
+
+  // Crear fecha en formato bonito dd/mm/aaaa
+  const fechaBonita = selectedDate.toLocaleDateString("es-AR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric"
+  });
+
+  const formContainer = document.getElementById("reservaFormContainer");
+  formContainer.style.display = "block";
+  formContainer.innerHTML = `
+    <h2>Último paso! </h2><p>Completa tus datos y confirma la reserva con ${turnosData[profId].nombre} el ${fechaBonita} a las ${hora}</p>
+   <form id="reservaForm">
+  
+  
+  <input type="text" id="nombre" name="nombre" placeholder="Nombre" required>
+  
+  
+  <input type="text" id="apellido" name="apellido" placeholder="Apellido" required>
+  
+  <input type="hidden" name="telefono" value="">
+  
+  
+  <input type="text" id="direccion" name="direccion" placeholder="Dirección" required>
+  
+  
+  <input type="hidden"  name="fechaNacimiento" value="">
+  
+  
+  <input type="email" id="email" name="email" placeholder="Email" required>
+  
+  
+  <input type="text" id="whatsapp" name="whatsapp" placeholder="Whatsapp" required>
+  
+  
+  <input type="text" id="dni" name="dni" placeholder="DNI" required>
+  
+  
+  <textarea id="comentario" name="comentario" placeholder="Comentario (opcional)"></textarea>
+  
+  <input type="hidden" name="extra1" value="">
+  <input type="hidden" name="extra2" value="">
+  <input type="hidden" name="extra3" value="">
+  
+  <button type="submit"><i class="fas fa-check"></i> Confirmar Reserva</button>
+</form>
+    <div id="reservaMsg"></div>
+  `;
+
+  // 🔽 Bajamos al formulario automáticamente
+  formContainer.scrollIntoView({ behavior: "smooth" });
+  
+ // ------------------ Enviar reserva ------------------
+  document.getElementById("reservaForm").onsubmit = async function(event){
+    event.preventDefault();
+    const form = this;
+    const submitButton = form.querySelector("button[type='submit']");
+    
+    // Bloquear botón para evitar múltiples clics
+    submitButton.disabled = true;
+    submitButton.innerText = "Reservando...";
+    const reservaMsg = document.getElementById("reservaMsg");
+    reservaMsg.innerHTML = "";
+
+    const formData = new FormData(form);
+    
+    const dataToSend = {
+      username,
+      profesional: selectedProf,
+      profesionalId: selectedProfId,
+      fecha: fechaStr,
+      hora: selectedHora,
+      nombre: formData.get("nombre"),
+      apellido: formData.get("apellido"),
+      telefono: formData.get("telefono"),
+      direccion: formData.get("direccion"),
+      fechaNacimiento: formData.get("fechaNacimiento"),
+      email: formData.get("email"),
+      whatsapp: formData.get("whatsapp"),
+      dni: formData.get("dni"),
+      comentario: formData.get("comentario"),
+      extra1: formData.get("extra1"),
+      extra2: formData.get("extra2"),
+      extra3: formData.get("extra3")
+    };
+    const res = await fetch(API_URL, {
+      method: "POST",
+      body: new URLSearchParams({action:"saveReserva", data: JSON.stringify(dataToSend)})
+    });
+    const result = await res.json();
+    console.log("Respuesta del backend:", result);
+    if (result.status === "ok") {
+  // borro el formulario, pero dejo el contenedor
+  document.getElementById("reservaForm").remove();
+// Reemplazar "cargando" por el ticket
+        reservaMsg.innerHTML = "";
+        document.getElementById("ticketContainer").innerHTML = `
+          <div class="ticket">
+            ${result.ticketHTML}
+            <button onclick="window.print()">Imprimir Ticket</button>
+          </div>
+        `; 
+ 
+
+  // actualizo turnos
+  cargarTurnos(fechaStr);
+} else {
+  document.getElementById("reservaMsg").innerText =
+    "Error al reservar: " + (result.msg || "");
+
+}
+  }; 
+} 
+
+
+// ------------------ INIT ------------------
+document.addEventListener("DOMContentLoaded", () => {
+  cargarLogo(username);
+
+  // Inicializamos selectedDate al día de hoy
+  selectedDate = new Date();
+
+  // Renderizamos calendario
+  renderCalendario(selectedDate.getFullYear(), selectedDate.getMonth());
+
+  // Cargamos turnos del día actual
+const todayStr = selectedDate.toLocaleDateString("fr-CA"); // yyyy-mm-dd sin UTC
+  cargarTurnos(todayStr).then(() => {
+    const turnosDiv = document.getElementById("turnos");
+    if (turnosDiv) turnosDiv.scrollIntoView({ behavior: "smooth" });
+  });
+});
+</script>
+<script>
+ setTimeout(() => {
+  document.getElementById('floatingLogo').style.transform = 'translateX(0)';
+}, 4000);
+</script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
+ 
+</body>
+</html>
