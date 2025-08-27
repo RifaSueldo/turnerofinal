@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Listado de Clientes Únicos</title>
+  <meta charset="UTF-8" />
+  <title>Panel TurnoX</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="color-scheme" content="light">
+<meta name="supported-color-schemes" content="light">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="https://i.ibb.co/p6Ycq6XC/Turnox-logo.png">
+  <!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<style>
+  :root { color-scheme: light only; }
+    body {
+      font-family: "Montserrat", sans-serif;
+      background-color: #4B2E78;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+
+   
+    .user-pill {
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 14px;
+      background: #ffffff25;
+      border: 1px solid #ffffff40;
+      margin: 0;
+    }
+    .creditos-info {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #5F48D7;
+      border: 1px solid #ffffff40;
+      font-size: 14px;
+    }
+  .container {
+    padding: 15px;
+  }
+
+  /* tabla */
+.table-wrapper {
+  margin: 100px auto 40px;
+  width: 95%;
+  max-width: 1000px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+  backdrop-filter: blur(8px);
+  background: rgba(255, 255, 255, 0.08); /* efecto vidrio */
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #5F48D7;
+      border: 1px solid #ffffff40;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+th, td {
+  padding: 14px 12px;
+  font-size: 14px;
+  text-align: left;
+  white-space: nowrap; /* evita que se rompa en columnas largas */
+}
+
+th {
+  background: #4B2E78;   /* mismo color que el fondo para coherencia */
+  color: #5F48D7;;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+tr:nth-child(even) td {
+  background: #ffffff15;
+}
+
+tr:hover td {
+  background: #5F48D7;; /* highlight suave al pasar */
+}
+
+/* Responsive: que no se achiquen demasiado las letras */
+@media (max-width: 600px) {
+  th, td {
+    padding: 10px 8px;
+    font-size: 12px;
+  }
+}
+  button{  background:#25213C; color:#5F48D7; border:none; border-radius:12px; padding:12px 16px; font-weight:700; cursor:pointer; transition:.2s transform,.2s background; font-size:15px; flex:1; }
+    button:hover{ transform:translateY(-2px); background:#ffffff25; color:#fff; }
+  .header-info {display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin:15px}
+  
+    .grid {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+  align-items: center;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.rect {
+  width: 80px;
+  height: 120px;
+  border: 2px solid #5F48D750;
+  border-radius: 12px;
+}
+
+.rect.filled {
+  background: #412866;
+}
+
+.down .rect {
+  animation: moveDown 20s linear infinite;
+}
+
+.up .rect {
+  animation: moveUp 20s linear infinite;
+}
+
+/* Arrancan desde arriba de la pantalla y van hacia abajo */
+@keyframes moveDown {
+  0%   { transform: translateY(-150vh); opacity: 0; }
+  10%  { opacity: 1; }
+  100% { transform: translateY(150vh); opacity: 0; }
+}
+
+/* Arrancan desde abajo y suben hacia arriba */
+@keyframes moveUp {
+  0%   { transform: translateY(150vh); opacity: 0; }
+  10%  { opacity: 1; }
+  100% { transform: translateY(-150vh); opacity: 0; }
+}
+/* Para ocultar/mostrar con el atributo hidden */
+[hidden] { display: none !important; }
+
+</style>
+</head>
+<body>
+  <div class="grid">
+  <div class="col down">
+    <div class="rect filled"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect filled"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+  </div>
+  <div class="col up">
+    <div class="rect"></div>
+    <div class="rect filled"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+     <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect filled"></div>
+  </div>
+  <div class="col down">
+   <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect filled"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    
+    <div class="rect"></div>
+    <div class="rect"></div>
+   <div class="rect filled"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+  </div>
+</div>
+<!-- Header -->
+  <div class="header-info">
+    <button style="max-width: 120px; max-height: 60px;" onclick="window.location.href='/creditos'">← Volver</button>
+    <h2 class="user-pill">¡Hola! <span id="usernameDisplay"></span></h2>
+    
+  </div>
+
+<div id="tablaReservas"></div>
+
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbwSHPQD3ZXVqMpPZ1E2cA9_ELs8hxScPkeEs5ReZ-_MwqZ9Wt3qvIgGy6pVk6STCebKBw/exec";
+const storedUserId = localStorage.getItem("userId");
+const storedUsername = localStorage.getItem("username");
+
+if (!storedUserId || !storedUsername) {
+  alert("No hay usuario logueado");
+  window.location.href = "login.html"; // o index.html, pero solo uno
+}
+
+let username = storedUsername;
+  
+document.addEventListener("DOMContentLoaded", ()=>{
+  document.getElementById("usernameDisplay").textContent = username;
+});
+async function cargarReservas(){
+  try {
+    const res = await fetch(`${API_URL}?action=getTurnosUsuario&username=${username}`);
+    const data = await res.json();
+    console.log("Respuesta API:", data);
+
+    let turnos = [];
+    if(data.turnos && typeof data.turnos === "object"){
+      Object.keys(data.turnos).forEach(profId => {
+        if(Array.isArray(data.turnos[profId])){
+          turnos.push(...data.turnos[profId]);
+        }
+      });
+    }
+
+    // 🔹 Filtrar por DNI (solo un registro por cliente)
+    const unicos = {};
+    turnos.forEach(t => {
+      if(t.dni){   // si tiene campo dni
+        unicos[t.dni] = t; // si ya existe se reemplaza por el último turno
+      }
+    });
+
+    renderTabla(Object.values(unicos));
+  } catch (e) {
+    console.error(e);
+    document.getElementById("tablaReservas").innerHTML = "<p>Error al cargar reservas.</p>";
+  }
+}
+
+function renderTabla(turnos){
+  const cont = document.getElementById("tablaReservas");
+
+  if(turnos.length === 0){
+    cont.innerHTML = "<p>No hay clientes para mostrar.</p>";
+    return;
+  }
+
+  let html = "<table><tr>";
+  // Encabezados dinámicos según las claves de los turnos
+  Object.keys(turnos[0]).forEach(key=>{
+    html += `<th>${key}</th>`;
+  });
+  html += "</tr>";
+
+  turnos.forEach(t=>{
+    html += "<tr>";
+    Object.values(t).forEach(val=>{
+      html += `<td>${val}</td>`;
+    });
+    html += "</tr>";
+  });
+
+  html += "</table>";
+  cont.innerHTML = html;
+}
+
+document.addEventListener("DOMContentLoaded", cargarReservas);
+
+  function renderTabla(turnos){
+  const cont = document.getElementById("tablaReservas");
+
+  if(turnos.length === 0){
+    cont.innerHTML = "<p>No hay clientes para mostrar.</p>";
+    return;
+  }
+
+  // 🔹 Definí qué campos NO querés mostrar
+  const excluir = ["extra1", "extra2", "extra3", "username", "profesional", "profesionalId", "fecha", "hora", "telefono", "fechaNacimiento", "comentario"];
+
+  // 🔹 Genero encabezados dinámicos excluyendo los no deseados
+  let claves = Object.keys(turnos[0]).filter(k => !excluir.includes(k));
+
+  let html = '<div class="table-wrapper"><table><tr>';
+  claves.forEach(key => {
+    html += `<th>${key}</th>`;
+  });
+  html += "</tr>";
+
+  // 🔹 Ahora genero filas SOLO con esas claves filtradas
+  turnos.forEach(t=>{
+    html += "<tr>";
+    claves.forEach(key=>{
+      html += `<td>${t[key] ?? ""}</td>`; // si falta la clave, queda vacío
+    });
+    html += "</tr>";
+  });
+
+  html += "</table></div>";
+  cont.innerHTML = html;
+}
+
+</script>
+
+</body>
+</html>
