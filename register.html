@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>TurnoX - Sistema PRE-PAGO de Turnos On Line</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+  <!-- Fuentes -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+
+  <!-- Iconos -->
+  <link rel="icon" type="image/png" href="https://i.ibb.co/p6Ycq6XC/Turnox-logo.png">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+
+  <!-- Open Graph para WhatsApp/Facebook -->
+  <meta property="og:title" content=">TurnoX - Sistema PRE-PAGO de Turnos On Line" />
+  <meta property="og:description" content="Turnero Pro." />
+  <meta property="og:image" content="https://i.ibb.co/p6Ycq6XC/Turnox-logo.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:url" content="https://turnox.pro/" />
+  <meta property="og:type" content="website" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="TurnoX - Sistema PRE-PAGO de Turnos On Line" />
+  <meta name="twitter:description" content="Turnero Pro." />
+  <meta name="twitter:image" content="https://i.ibb.co/p6Ycq6XC/Turnox-logo.png" />
+  <style>
+    /* Reset y estilos generales */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+      background-color: #533482;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+       margin: 0;
+      min-height: 100vh; /* ocupa toda la pantalla */
+    transition: background-color 1s ease-in-out; /* transición suave del fondo */
+    }
+
+    .logo {
+  font-size: 3rem;
+      font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 700;
+  font-style: bold;
+      margin-bottom: -2px;
+      letter-spacing: -2px; /* valor negativo junta más las letras */
+  position: relative;
+  display: inline-block;
+  color: transparent;
+  }
+  .logo::before {
+    content: "TurnoX";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      120deg,
+      transparent,
+      rgba(255,255,255,0.9),
+      transparent
+    );
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shine 5s infinite linear;
+  }
+
+@keyframes shine {
+  0%   { background-position: 200% 0; }   /* 👉 arranca a la derecha */
+  100% { background-position: -200% 0; }  /* 👉 termina a la izquierda */
+}
+
+.logo span {
+      font-weight: 400;
+    }
+
+    .web {
+      font-size: 0.9rem;
+      
+      margin-bottom: 40px;
+      color: #ffffffcc;
+    }
+
+    
+    .container {
+      display: flex;
+  flex-direction: column; /* uno debajo del otro */
+  align-items: center;    /* centrado horizontal */
+  text-align: center;
+      color: white;
+      width: 100%;
+      max-width: 350px;
+    }
+    form {
+      background: transparent;
+      padding: 1rem;
+      border-radius: 12px;
+    }
+
+    h2 {
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.8rem;
+      margin: 0.5rem 0;
+      border: none;
+      border-radius: 8px;
+      outline: none;
+      font-size: 1rem;
+    }
+
+    button {
+      width: 100%;
+      padding: 0.8rem;
+      background: white;
+      color: #533482;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+
+    button:hover {
+      background: #e5e5e5;
+    }
+
+    #msg {
+      margin-top: 1rem;
+      font-size: 0.9rem;
+    }
+    
+
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Logo y web -->
+    <div class="logo">TurnoX</div>
+    <span class="web">www.turnox.pro</span>
+
+    <!-- Form -->
+    <form id="registerForm"> 
+      <h2>Crear tu cuenta:</h2> 
+      <input type="email" id="email" placeholder="Email" required> 
+      <input type="password" id="password" placeholder="Contraseña" required> 
+      <input type="text" id="username" placeholder="nombreDeTuNegocio" required> 
+      <span class="web">Tu "nombre de negocio" será "tu link" ej: www.turnox.pro/peluquitos o www.turnox.pro/hair-studio.</span>
+      <button type="submit">Crear cuenta</button> 
+      <button type="button" onclick="window.location.href='/login'">Ya tengo una cuenta</button>
+      
+      
+    </form>
+    <div id="msg"></div> 
+  <script>
+    const API_URL = "https://script.google.com/macros/s/AKfycbwSHPQD3ZXVqMpPZ1E2cA9_ELs8hxScPkeEs5ReZ-_MwqZ9Wt3qvIgGy6pVk6STCebKBw/exec";
+// 🔹 Transformar el username en tiempo real
+  document.getElementById("username").addEventListener("input", function(e) {
+    this.value = this.value
+      .replace(/\s+/g, "-")      // reemplaza espacios por guiones
+      .replace(/[^a-zA-Z0-9-]/g, "") // elimina símbolos raros
+      .toLowerCase();            // pasa todo a minúsculas
+  });
+
+    document.getElementById("registerForm").addEventListener("submit", async (e)=>{
+      e.preventDefault();
+
+      const email = document.getElementById("email").value.trim();
+      let username = document.getElementById("username").value.trim().toLowerCase(); // ⬅ siempre minúsculas
+      const password = document.getElementById("password").value.trim();
+      const msg = document.getElementById("msg");
+// ------------------ VALIDAR CONTRASEÑA ------------------
+  const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/;
+  if(!regex.test(password)){
+    msg.style.color = "white";
+    msg.textContent = "❌ La contraseña debe tener al menos una mayúscula, una minúscula y un número.";
+    return; // no seguimos con el fetch
+  }
+  
+      msg.textContent = "Procesando...";
+
+      try {
+        const res = await fetch(API_URL, {
+          method: "POST",
+          body: new URLSearchParams({
+            action: "register",
+            email,
+            username, // envío en minúscula
+            password
+          })
+        });
+
+        const data = await res.json();
+
+        if (data.status === "ok") {
+          
+          // 🔹 Ocultamos el formulario
+        document.getElementById("registerForm").style.display = "none";
+          
+  msg.style.color = "white";
+  msg.innerHTML = `
+    Cuenta creada con éxito. Tu sitio es: <strong>www.turnoxok.netlify.app/${data.username.toLowerCase()}</strong><br>
+    Tu Usuario es:<strong> ${data.email}</strong><br>
+    Enviamos un mail con los datos a:<strong> ${data.email}</strong><br>
+    Agregamos créditos gratis a tu cuenta:<strong> 5 créditos</strong> para prueba.<br>
+    
+    <button id="ingresarPanel" style="margin-top:10px; padding:8px 16px; cursor:pointer;">Ir a tu sitio.</button>
+  `;
+  document.getElementById("ingresarPanel").onclick = () => {
+    window.location.href = `https://turnoxok.netlify.app/${encodeURIComponent(data.username.toLowerCase())}`;
+  };
+
+
+        } else {
+          msg.style.color = "white";
+          msg.textContent = `❌ ${data.msg}`;
+        }
+      } catch (err) {
+        console.error(err);
+        msg.style.color = "white";
+        msg.textContent = "⚠️ Error de conexión con el servidor.";
+      }
+    });
+  </script>
+</body>
+</html>
