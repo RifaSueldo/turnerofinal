@@ -1,0 +1,369 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>TurnoX - Sistema PRE-PAGO de Turnos On Line</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+  <!-- Fuentes -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+
+  <!-- Iconos -->
+  <link rel="icon" type="image/png" href="https://i.ibb.co/p6Ycq6XC/Turnox-logo.png">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+
+  <!-- Open Graph para WhatsApp/Facebook -->
+  <meta property="og:title" content=">TurnoX - Sistema PRE-PAGO de Turnos On Line" />
+  <meta property="og:description" content="Turnero Pro." />
+  <meta property="og:image" content="https://i.ibb.co/p6Ycq6XC/Turnox-logo.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:url" content="https://turnox.pro/" />
+  <meta property="og:type" content="website" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="TurnoX - Sistema PRE-PAGO de Turnos On Line" />
+  <meta name="twitter:description" content="Turnero Pro." />
+  <meta name="twitter:image" content="https://i.ibb.co/p6Ycq6XC/Turnox-logo.png" />
+  <style>
+    /* Reset y estilos generales */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+      background-color: #533482;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+       margin: 0;
+      min-height: 100vh; /* ocupa toda la pantalla */
+    transition: background-color 1s ease-in-out; /* transición suave del fondo */
+    }
+
+    .logo {
+  font-size: 3rem;
+      font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 700;
+  font-style: bold;
+      margin-bottom: -2px;
+      letter-spacing: -2px; /* valor negativo junta más las letras */
+  position: relative;
+  display: inline-block;
+  color: transparent;
+  }
+  .logo::before {
+    content: "TurnoX";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      120deg,
+      transparent,
+      rgba(255,255,255,0.9),
+      transparent
+    );
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shine 5s infinite linear;
+  }
+
+@keyframes shine {
+  0%   { background-position: 200% 0; }   /* 👉 arranca a la derecha */
+  100% { background-position: -200% 0; }  /* 👉 termina a la izquierda */
+}
+
+
+
+    .subtitle {
+      font-size: 0.9rem;
+      font-weight: 400;
+      margin-bottom: 40px;
+      color: #ffffffcc;
+    }
+
+    .login-container {
+      text-align: center;
+      color: #fff;
+    }
+
+    
+    .login-container label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    .login-container input {
+      width: 90%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border: none;
+      border-radius: 6px;
+      outline: none;
+      font-size: 14px;
+    }
+
+    .login-container button {
+      display: block;
+      width: 250px;
+      padding: 15px 0;
+      margin: 10px auto;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #533482;
+      background-color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background-color 0.3s, transform 0.2s;
+    }
+
+    .login-container button:hover {
+      background-color: #f2f2f2;
+      transform: translateY(-2px);
+    }
+
+    .recuperar {
+      margin-top: 15px;
+    }
+
+    .recuperar a {
+      color: white;
+      font-size: 14px;
+      text-decoration: none;
+    }
+
+    .recuperar a:hover {
+      text-decoration: underline;
+    }
+
+    /* Div oculto recuperar clave */
+    #recuperarDiv {
+      margin-top: 20px;
+      background: rgba(255,255,255,0.1);
+      padding: 15px;
+      border-radius: 0px;
+    }
+
+    #recuperarDiv input {
+      background: white;
+      color: black;
+      margin-bottom: 10px;
+    }
+
+    #recuperarDiv button {
+      display: block;
+      width: 250px;
+      padding: 15px 0;
+      margin: 10px auto;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #533482;
+      background-color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background-color 0.3s, transform 0.2s;
+    }
+  #recuperarDiv button:hover {
+      background-color: #f2f2f2;
+      transform: translateY(-2px);
+    }
+ #toast {
+  display: flex; /* lo dejamos flex para centrar el texto siempre */
+  opacity: 0; /* invisible al inicio */
+  pointer-events: none; /* no bloquea clicks */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(83, 52, 130, 0.85); /* violeta semitransparente */
+  backdrop-filter: blur(5px); /* efecto esmerilado */
+  color: white;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2rem;
+  font-weight: 600;
+  z-index: 1000;
+  text-align: center;
+  padding: 20px;
+  box-sizing: border-box;
+  transition: opacity 0.3s;
+}
+
+.spinnerX {
+  display: none; /* oculto por defecto */
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;  /* Bold */
+  font-size: 48px;
+  margin: 20px auto;
+  text-align: center;
+
+  /* Gradiente animado */
+  background: linear-gradient(
+      120deg,
+      transparent,
+      rgba(255,255,255,0.9),
+      transparent
+    );
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shine 5s infinite linear;
+  
+
+  animation: spinX 1.2s linear infinite, shine 3s ease infinite;
+}
+
+
+
+@keyframes shine {
+ 0%   { background-position: 200% 0; }   /* 👉 arranca a la derecha */
+  100% { background-position: -200% 0; }  /* 👉 termina a la izquierda */
+}
+
+
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <div class="logo">TurnoX</div>
+    <div class="subtitle">www.turnox.pro</div>
+
+    <label for="email">Ingresa a tu cuenta:</label>
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="password" placeholder="Contraseña">
+    <button onclick="login()">Ingresar</button>
+    <div class="spinnerX" id="spinnerIngresar">X</div>
+
+    <div class="recuperar">
+      <a href="#" onclick="mostrarRecuperar()">¿Olvidaste tu contraseña?</a>
+      <a onclick="window.location.href='/register'">No tengo cuenta</a>
+    </div>
+
+    <div id="recuperarDiv" style="display:none;">
+      <label for="email">Recupera tu contraseña:</label>
+      <input type="email" id="recuperarEmail" placeholder="Tu email">
+      <button onclick="recuperarClave()">Enviar</button>
+      <div class="spinnerX" id="spinnerRecuperar">X</div>
+    </div>
+  </div>
+<div id="toast"></div>
+  <script>
+    const API_URL = "https://script.google.com/macros/s/AKfycbwSHPQD3ZXVqMpPZ1E2cA9_ELs8hxScPkeEs5ReZ-_MwqZ9Wt3qvIgGy6pVk6STCebKBw/exec";
+async function login() {
+  const spinner = document.getElementById("spinnerIngresar");
+  spinner.style.display = "block"; // mostrar spinner
+
+  try {
+    const res = await fetch(API_URL, {
+      method: "POST",
+      body: new URLSearchParams({
+        action: "login",
+        email: document.getElementById("email").value.trim(),
+        password: document.getElementById("password").value.trim()
+      })
+    });
+
+    const data = await res.json();
+console.log("Respuesta del login:", data); // <--- mirar cómo llega
+    if (data.status === "ok") {
+  spinner.style.display = "none";
+  showToast("¡Vamos!");
+
+  // Guardar datos del usuario correctamente
+  localStorage.setItem("userId", data.userId);
+  localStorage.setItem("username", data.username);
+  localStorage.setItem("email", data.email || ""); // email puede no venir
+
+  // Redirigir usando el username correcto
+  window.location.href = `/creditos.html?username=${data.username}`;
+} else {
+  showToast("Ups! Fijate bien el email y la clave");
+}
+
+
+  } catch (error) {
+    showToast("Error de conexión");
+    console.error(error);
+  } finally {
+    spinner.style.display = "none"; // ✅ se oculta siempre
+  }
+}
+
+    
+    function mostrarRecuperar() {
+  document.getElementById("recuperarDiv").style.display = "block";
+}
+
+async function recuperarClave() {
+  const email = document.getElementById("recuperarEmail").value.trim();
+  const spinner = document.getElementById("spinnerRecuperar");
+
+  if (!email) {
+    showToast("Ingresá tu email");
+    return;
+  }
+
+  spinner.style.display = "block"; // mostrar X spinner
+
+  try {
+    const res = await fetch(API_URL, {
+      method: "POST",
+      body: new URLSearchParams({
+        action: "recoverPassword",
+        email: email
+      })
+    });
+
+    const data = await res.json();
+
+    if (data.status === "ok") {
+      showToast("Enviamos la contraseña al mail..");
+    } else {
+      showToast("Ups! No encontramos tu email..");
+    }
+
+  } catch (error) {
+    showToast("Error de conexión");
+    console.error(error);
+  } finally {
+    spinner.style.display = "none"; // ✅ siempre se oculta
+  }
+}
+
+function showToast(message) {
+  const toast = document.getElementById("toast");
+  toast.innerText = message;
+  toast.style.opacity = "1";
+  toast.style.pointerEvents = "auto"; // ahora sí puede interactuar si hace falta
+
+  setTimeout(() => {
+    toast.style.opacity = "0";
+    toast.style.pointerEvents = "none"; // vuelve a no bloquear
+  }, 3000);
+}
+
+  </script>
+</head>
+
+</body>
+</html>
