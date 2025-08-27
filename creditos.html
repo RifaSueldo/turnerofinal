@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Panel TurnoX</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="color-scheme" content="light">
+<meta name="supported-color-schemes" content="light">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="https://i.ibb.co/p6Ycq6XC/Turnox-logo.png">
+  <!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+ <style>
+   :root {
+  color-scheme: light only;
+}
+ body {
+  font-family: "Montserrat", sans-serif;
+ background-color: #4B2E78; /* tu color base */
+  color: #fff;              /* texto claro */
+  margin: 0;
+  padding: 0;
+}
+
+
+/* Header alineado arriba a la derecha */
+.header-info {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* Cajita usuario */
+.user-pill {
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 14px;
+  background: #ffffff25;
+  border: 1px solid #ffffff40;
+  margin: 0;
+}
+
+/* Créditos con icono y número */
+.creditos-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #ffffff25;
+  border: 1px solid #ffffff40;
+  font-size: 14px;
+}
+
+/* Contenedor principal centrado */
+.container {
+  font-family: "Montserrat", sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh; /* ocupa toda la pantalla */
+  text-align: center;
+  gap: 20px;
+}
+
+/* Controles de cantidad */
+.cantidad-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cantidad-btn {
+   background: #25213C;
+    color: #5F48D7;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 20px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.cantidad-btn:hover {
+  background: #ffffff25;
+  color: #fff;
+}
+
+/* Input de cantidad */
+#cantidadCreditos {
+  font-family: "Montserrat", sans-serif;
+  width: 160px;
+  text-align: center;
+  font-size: 80px;
+  padding: 5px;
+   background: none;
+  border: none;
+  color: #fff;
+}
+
+/* Total a pagar */
+.total-box {
+  font-size: 18px;
+  font-weight: bold;
+  background: none;
+  padding: 8px 16px;
+  
+}
+
+/* Botón Comprar */
+.btn-comprar {
+   font-family: "Montserrat", sans-serif;
+   background: #25213C;
+    color: #5F48D7;
+  border: none;
+  padding: 12px 70px;
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 20px;
+  border-bottom-left-radius: 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-comprar:hover {
+  background: #ffffff25;
+  color: #fff;
+}
+  /* Bottom nav */
+  .bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    max-width: 500px;
+    background: #1c1c1c;
+    border-top: 1px solid #ffffff25;
+    padding: 10px 0;
+    z-index: 1000;
+  }
+  .nav-item {
+    flex: 1;
+    text-align: center;
+    text-decoration: none;
+    color: #fff;
+    font-size: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+  .nav-item i {
+    font-size: 20px;
+    padding: 8px;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+  }
+  .nav-item span {
+    font-size: 12px;
+    transition: color 0.3s ease;
+  }
+  .nav-item.active i {
+    background: #25213C;
+    color: #5F48D7;
+    transform: scale(1.1);
+  }
+  .nav-item.active span {
+    color: #5F48D7;
+    font-weight: 500;
+  }
+  .nav-item:hover { opacity: 0.8; }
+   
+.grid {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+  align-items: center;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.rect {
+  width: 80px;
+  height: 120px;
+  border: 2px solid #5F48D750;
+  border-radius: 12px;
+}
+
+.rect.filled {
+  background: #412866;
+}
+
+.down .rect {
+  animation: moveDown 20s linear infinite;
+}
+
+.up .rect {
+  animation: moveUp 20s linear infinite;
+}
+
+/* Arrancan desde arriba de la pantalla y van hacia abajo */
+@keyframes moveDown {
+  0%   { transform: translateY(-150vh); opacity: 0; }
+  10%  { opacity: 1; }
+  100% { transform: translateY(150vh); opacity: 0; }
+}
+
+/* Arrancan desde abajo y suben hacia arriba */
+@keyframes moveUp {
+  0%   { transform: translateY(150vh); opacity: 0; }
+  10%  { opacity: 1; }
+  100% { transform: translateY(-150vh); opacity: 0; }
+}
+/* Para ocultar/mostrar con el atributo hidden */
+[hidden] { display: none !important; }
+
+/* Botón flotante */
+.floating-tab {
+  position: fixed;
+  top: 15%;             /* 15% desde arriba */
+  left: 50%;            /* lo mandamos al centro horizontal */
+  transform: translateX(-50%); /* lo centramos exactamente */
+  z-index: 999;
+width: 280px; 
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* 👈 centra botón y contenido */
+}
+
+.floating-tab button {
+  background: #25213C;
+    color: #5F48D7;
+  border: none;
+  padding: 10px 15px;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+  cursor: pointer;
+  font-family: "Montserrat", sans-serif;
+  font-size: 16px;
+  text-align: center;
+  width: 280px; 
+  
+}
+
+.floating-tab button:hover {
+  background: #ffffff25;
+  color: #fff;
+}
+
+/* Contenido oculto del tab */
+.tab-content {
+  max-height: 0;
+  overflow: hidden;
+  background: #25213C50;
+  border: none;
+  border-radius: 0;
+  padding: 0 10px;
+  transition: max-height 0.4s ease, padding 0.4s ease;
+  text-align: center;
+}
+
+.tab-content.open {
+  max-height: 280px;
+  width:260px; 
+  padding: 10px;
+  font-size: 14px;
+}
+
+.tab-content p {
+  margin: 0 0 5px 0;
+  font-size: 14px;
+  color: #5F48D7;
+}
+
+.tab-content a {
+  font-weight: bold;
+  color: #5F48D7;
+  text-decoration: none;
+}
+
+.tab-content a:hover {
+  text-decoration: underline;
+}
+
+
+</style>
+</head>
+<body>
+
+
+
+
+
+<div class="grid">
+  <div class="col down">
+    <div class="rect filled"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect filled"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+  </div>
+  <div class="col up">
+    <div class="rect"></div>
+    <div class="rect filled"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+     <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect filled"></div>
+  </div>
+  <div class="col down">
+   <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect filled"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    
+    <div class="rect"></div>
+    <div class="rect"></div>
+   <div class="rect filled"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+  </div>
+</div>
+
+
+ <!-- Header con usuario y créditos -->
+<div class="header-info">
+  <h2 class="user-pill">¡Hola! <span id="usernameDisplay"></span></h2>
+  <div class="creditos-info">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+      <path fill="currentColor" fill-rule="evenodd" d="M17.47 8.893C18.886 8.185 19 7.577 19 7.5s-.114-.685-1.53-1.393C16.173 5.459 14.242 5 12 5s-4.173.459-5.47 1.107C5.114 6.815 5 7.423 5 7.5s.114.685 1.53 1.393C7.827 9.541 9.758 10 12 10s4.173-.459 5.47-1.107M21 7.5c0 2.485-4.03 4.5-9 4.5S3 9.985 3 7.5 7.03 3 12 3s9 2.015 9 4.5m-17 4a1 1 0 0 1 1 1c0 .137.053.327.262.573.389.457 1.196.953 2.42 1.331 1.196.37 2.686.596 4.318.596s3.123-.226 4.319-.596c1.223-.378 2.03-.874 2.42-1.331.208-.246.261-.436.261-.573a1 1 0 1 1 2 0c0 .721-.3 1.354-.738 1.869-.743.873-1.967 1.517-3.352 1.946-1.412.437-3.105.685-4.91.685s-3.498-.248-4.91-.685c-1.385-.429-2.609-1.073-3.352-1.946C3.301 13.854 3 13.22 3 12.5a1 1 0 0 1 1-1M5 17a1 1 0 1 0-2 0c0 .721.3 1.354.738 1.869.743.873 1.967 1.517 3.352 1.946 1.412.437 3.105.685 4.91.685s3.498-.248 4.91-.685c1.385-.429 2.609-1.073 3.352-1.946.437-.515.738-1.148.738-1.869a1 1 0 1 0-2 0c0 .137-.053.327-.262.573-.389.457-1.196.953-2.42 1.331-1.196.37-2.686.596-4.318.596s-3.122-.226-4.319-.596c-1.223-.378-2.03-.874-2.42-1.331C5.054 17.327 5 17.137 5 17" clip-rule="evenodd"></path>
+    </svg>
+    <span id="creditosActuales">Cargando...</span>
+  </div>
+  
+</div>
+ 
+ 
+<div class="container">
+ 
+  <div class="cantidad-wrapper">
+    <!-- Botón flotante -->
+<div class="floating-tab">
+  <button onclick="toggleUserTab()">Ver Mi Sitio</button>
+  <div class="tab-content" id="tabContent">
+    <a id="userLink" href="#" target="_blank">https://turnox.pro/username</a>
+  </div>
+</div>
+  <button id="btnMenos" class="cantidad-btn">-</button>
+  <input type="number" id="cantidadCreditos" min="0" value="10" step="10">
+  <button id="btnMas" class="cantidad-btn">+</button>
+</div>
+<p class="total-box">Total a pagar: <span id="totalPagar">$170</span></p>
+<button class="btn-comprar" onclick="comprarCreditos()">Agregar + Créditos</button>
+
+</div>
+ 
+  
+<!-- Barra inferior -->
+  <div class="bottom-nav">
+    <a href="#" class="nav-item active" id="btnCreditos"><i class="fa fa-plus-circle"></i><span>Créditos</span></a>
+    <a href="#" class="nav-item" id="btnConfig"><i class="fa fa-tasks"></i><span>Config.</span></a>
+    <a href="#" class="nav-item" id="btnClientes"><i class="fa fa-user"></i><span>Clientes</span></a>
+    <a href="#" class="nav-item" id="btnTurnos"><i class="fa fa-calendar"></i><span>Turnos</span></a>
+    <a href="#" class="nav-item" id="btnPerfil"><i class="fa fa-upload"></i><span>Logo</span></a>
+    <a href="#" class="nav-item" id="btnLogout"><i class="fa fa-sign-out-alt"></i><span>Salir</span></a>
+  </div>
+
+    <script>
+const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzRGVtMbeFygbgrloutHdNndoT_O8Du6fyreOgo_oiKKCmTcVWFrrJJDSwYBzUHZzI-/exec"; // URL de tu Apps Script
+
+let username, userId;
+
+function init(data) {
+   console.log("👉 init llamado con:", data); // 👈 log de qué datos llegaron
+  username = data.username;
+  userId = data.userId;
+  document.getElementById("usernameDisplay").innerText = username;
+
+  // Trae créditos actuales
+  fetch(`${WEBAPP_URL}?action=getCreditos&username=${encodeURIComponent(username)}`)
+    .then(r => r.json())
+    .then(data => {
+      document.getElementById("creditosActuales").innerText = data.creditos;
+    });
+}
+
+function comprarCreditos() {
+  const cantidad = parseInt(document.getElementById("cantidadCreditos").value, 10);
+  if (!cantidad || cantidad <= 0) return alert("Cantidad inválida");
+
+  // Crear preferencia
+  fetch(`${WEBAPP_URL}?action=crearPreferencia&username=${encodeURIComponent(username)}&userId=${encodeURIComponent(userId)}&cantidad=${cantidad}`)
+    .then(r => r.json())
+    .then(data => {
+      if (data.url) {
+        window.location.href = data.url; // abre Mercado Pago
+      } else {
+        alert("Error al generar link de pago");
+      }
+    });
+}
+
+
+</script>
+ <script>
+const precioUnitario = 170;
+
+function actualizarTotal() {
+  const cantidad = parseInt(document.getElementById("cantidadCreditos").value) || 1;
+  const total = cantidad * precioUnitario;
+  document.getElementById("totalPagar").textContent = `$${total}`;
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  // Inicializa total
+  actualizarTotal();
+
+  // Botones + y -
+  document.getElementById("btnMenos").addEventListener("click", () => {
+    document.getElementById("cantidadCreditos").stepDown();
+    actualizarTotal();
+  });
+
+  document.getElementById("btnMas").addEventListener("click", () => {
+    document.getElementById("cantidadCreditos").stepUp();
+    actualizarTotal();
+  });
+
+  // También si alguien escribe manualmente
+  document.getElementById("cantidadCreditos").addEventListener("input", actualizarTotal);
+});
+</script>
+
+ 
+<script>
+// --- Protege acceso ---
+// La sesión solo es válida si existe en localStorage
+const storedUserId = localStorage.getItem("userId");
+const storedUsername = localStorage.getItem("username");
+
+if (!storedUserId || !storedUsername) {
+  // No hay sesión => redirigir al login
+  window.location.href = "index.html";
+}
+
+// Ahora usamos lo del localStorage (no confiamos en los query params)
+userId = storedUserId;
+username = storedUsername;
+
+// Inicializamos de nuevo pero con datos del localStorage
+init({ username, userId });
+
+// --- Links de navegación dinámicos ---
+document.getElementById("btnCreditos").href   = `creditos.html`;
+document.getElementById("btnConfig").href     = `configuracion.html`;
+document.getElementById("btnClientes").href   = `clientes.html`;
+document.getElementById("btnTurnos").href     = `turnos.html`;
+document.getElementById("btnPerfil").href     = `perfil.html`;
+ 
+
+// --- Logout ---
+document.getElementById("btnLogout").addEventListener("click", (e) => {
+  e.preventDefault();
+  localStorage.removeItem("username");
+  localStorage.removeItem("userId");
+  window.location.href = "index.html";
+});
+
+// --- Activa nav según página actual ---
+const currentPage = window.location.pathname.split("/").pop(); // ej: "creditos.html"
+document.querySelectorAll(".nav-item").forEach(item => {
+  const hrefPage = item.getAttribute("href")?.split("/").pop();
+  if (hrefPage === currentPage) {
+    document.querySelectorAll(".nav-item").forEach(i => i.classList.remove("active"));
+    item.classList.add("active");
+  }
+});
+</script>
+
+
+<script>
+  function toggleUserTab() {
+    const content = document.getElementById("tabContent");
+    content.classList.toggle("open");
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const username = localStorage.getItem("username"); // 👈 acá trae el username
+    if (username) {
+      const link = document.getElementById("userLink");
+      link.href = "https://turnox.pro/" + encodeURIComponent(username);
+      link.textContent = "https://turnox.pro/" + username;
+    }
+  });
+</script>
+
+
+
+</body>
+</html>
