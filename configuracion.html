@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>TurnoX – Configurar disponibilidad (Lun–Dom)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="https://i.ibb.co/p6Ycq6XC/Turnox-logo.png">
+
+  <style>
+    :root{ --morado:#533482; --morado-osc:#452a7a; --claro:#F4EDFF; --gris:#e7e7e7; --texto:#2b2b2b; --ok:#18a957; --err:#d93636; --blanco:#ffffff; }
+    *{box-sizing:border-box}
+    body{ margin:0; padding:14px; font-family:Montserrat,system-ui,-apple-system,Segoe UI,Roboto,Arial; background:var(--morado); color:#fff; }
+    h1{ margin:0 0 10px 0; text-align:center; font-size:22px}
+    .topbar{display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:12px}
+    .note{opacity:.95; font-size:14px; background:#25213C; color:#5F48D7;}
+    button{  background:#25213C; color:#5F48D7; border:none; border-radius:12px; padding:12px 16px; font-weight:700; cursor:pointer; transition:.2s transform,.2s background; font-size:15px; flex:1; }
+    button:hover{ transform:translateY(-2px); background:#ffffff25; color:#fff; }
+    button[disabled]{ opacity:.6; cursor:not-allowed; transform:none; font-family:Montserrat, }
+    .profesional{ border:1px solid #ffffff30; background:#ffffff15; border-radius:14px; padding:14px; margin:12px 0; backdrop-filter: blur(3px); }
+    .profesional h3{ margin:0 0 10px 0; font-size:18px; text-align:center;  }
+    .actions{ display:flex; flex-wrap:wrap; gap:10px; margin-top:8px }
+    .editor{ margin-top:12px; background:#ffffff15; color:#fff; border-radius:16px; padding:12px; backdrop-filter: blur(6px);
+    border: 1px solid #ffffff40;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+           }
+    .toolbar{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; margin-bottom:12px; }
+    .toolbar .left, .toolbar .right{ display:flex; gap:8px; align-items:center; flex-wrap:wrap }
+    select, input[type=time]{ padding:10px 12px; border:1px solid var(--gris); border-radius:10px; font-weight:600; background:#fff; color:var(--texto); font-size:15px; }
+    .week{ display:grid; gap:12px; grid-template-columns:repeat(2,1fr); }
+    @media (max-width:640px){ .week{ grid-template-columns:1fr } }
+    .day{ border:1px solid var(--gris); border-radius:12px; padding:12px; background:#ffffff15; }
+    .day h4{ font-family:Montserrat, margin:0 0 10px 0; color:var(--morado); font-size:16px }
+    .range{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-bottom:10px }
+    .slots{ display:flex; flex-wrap:wrap; gap:8px }
+    .slot{ padding:8px 12px; border-radius:10px; border:1px solid var(--gris); font-weight:700; font-size:14px; background:#eee; color:#666; cursor:pointer; user-select:none; transition:.15s; }
+    .slot.selected{ background:var(--morado); color:#fff; border-color:var(--morado) }
+    .mini{ font-size:12px; opacity:.8; margin-left:4px }
+    .footerBar{ display:flex; justify-content:center; margin-top:14px }
+    .status{ margin-top:10px; text-align:center; font-size:14px }
+    .status.ok{ color:var(--ok) }
+    .status.err{ color:var(--err) }
+    .btn-link{  background:#25213C; color:#5F48D7; border:1px dashed var(--morado); font-size:13px; padding:8px 12px }
+    .btn-danger{  background:#25213C; color:#5F48D7; border:none; }
+    .pill{ padding:5px 10px; border-radius:999px; font-size:12px; background:#ffffff25; border:1px solid #ffffff40 }
+    .guardar-btn{ background:#25213C; color:#5F48D7; font-size:16px!important; padding:14px!important; border-radius:14px!important; width:100%; }
+    .guardar-btn:hover{ background: #ffffff25; }
+
+    /* Loader */
+    #loaderOverlay{
+      position:fixed; top:0; left:0; right:0; bottom:0;
+      background:rgba(0,0,0,.65);
+      display:none; align-items:center; justify-content:center;
+      flex-direction:column; z-index:9999; color:#fff;
+      font-size:18px; font-weight:600;
+    }
+    .spinner{
+      border:6px solid #ffffff40;
+      border-top:6px solid var(--blanco);
+      border-radius:50%;
+      width:60px; height:60px;
+      animation:spin 1s linear infinite;
+      margin-bottom:14px;
+    }
+    @keyframes spin{ from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+
+    .grid {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+  align-items: center;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.rect {
+  width: 80px;
+  height: 120px;
+  border: 2px solid #5F48D750;
+  border-radius: 12px;
+}
+
+.rect.filled {
+  background: #412866;
+}
+
+.down .rect {
+  animation: moveDown 20s linear infinite;
+}
+
+.up .rect {
+  animation: moveUp 20s linear infinite;
+}
+
+/* Arrancan desde arriba de la pantalla y van hacia abajo */
+@keyframes moveDown {
+  0%   { transform: translateY(-150vh); opacity: 0; }
+  10%  { opacity: 1; }
+  100% { transform: translateY(150vh); opacity: 0; }
+}
+
+/* Arrancan desde abajo y suben hacia arriba */
+@keyframes moveUp {
+  0%   { transform: translateY(150vh); opacity: 0; }
+  10%  { opacity: 1; }
+  100% { transform: translateY(-150vh); opacity: 0; }
+}
+/* Para ocultar/mostrar con el atributo hidden */
+[hidden] { display: none !important; }
+
+  </style>
+</head>
+<body>
+
+  <div class="grid">
+  <div class="col down">
+    <div class="rect filled"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect filled"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+  </div>
+  <div class="col up">
+    <div class="rect"></div>
+    <div class="rect filled"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+     <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect filled"></div>
+  </div>
+  <div class="col down">
+   <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect filled"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    
+    <div class="rect"></div>
+    <div class="rect"></div>
+   <div class="rect filled"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+  </div>
+</div>
+  <div class="topbar">
+  <button style="max-width: 120px; max-height: 60px;" onclick="window.location.href='/creditos'">← Volver</button>
+    <div class="note pill" style="color:#fff;">¡Hola! <b id="who">—</b></div>
+  </div>
+
+  <div class="actions">
+    <button id="addProfBtn">+ Agregar Profesional</button>
+  </div>
+
+  <div id="profesionales"></div>
+
+  <!-- Loader -->
+  <div id="loaderOverlay">
+    <div class="spinner"></div>
+    <div id="loaderText">Cargando…</div>
+  </div>
+
+  <script>
+    function showLoader(txt="Cargando…"){
+      document.getElementById("loaderText").textContent=txt;
+      document.getElementById("loaderOverlay").style.display="flex";
+    }
+    function hideLoader(){
+      document.getElementById("loaderOverlay").style.display="none";
+    }
+
+    // === CONFIG ===
+    const API_URL = "https://script.google.com/macros/s/AKfycbwSHPQD3ZXVqMpPZ1E2cA9_ELs8hxScPkeEs5ReZ-_MwqZ9Wt3qvIgGy6pVk6STCebKBw/exec";
+
+    // === SESSION ===
+    let userId = localStorage.getItem("userId");
+    let username = localStorage.getItem("username");
+
+    const q = new URLSearchParams(location.search);
+    if (!userId && q.get("userId")) userId = q.get("userId");
+    if (!username && q.get("username")) username = q.get("username");
+
+    const dias = ["Lunes","Martes","Miércoles","Jueves","Viernes","Sábado","Domingo"];
+    document.getElementById("addProfBtn").onclick = agregarProfesional;
+
+    async function init(){
+      if(!userId || !username){
+        alert("Debes iniciar sesión primero.");
+        location.href="/login.html";
+        return;
+      }
+      document.getElementById("who").textContent = username;
+      showLoader("Cargando profesionales…");
+      await cargarProfesionales();
+      hideLoader();
+    }
+
+    async function cargarProfesionales(){
+      const res = await fetch(`${API_URL}?username=${encodeURIComponent(username)}`);
+      const data = await res.json();
+      if(data.status==="ok"){
+        renderProfesionales(data.profesionales||[]);
+      }else{
+        document.getElementById("profesionales").innerHTML = `<div class="note">No se pudieron cargar los profesionales.</div>`;
+      }
+    }
+
+    function renderProfesionales(list){
+      const cont = document.getElementById("profesionales");
+      if (!list || list.length === 0) {
+    cont.innerHTML = `
+      <div class="note" style="text-align:center; margin:20px 0; padding:15px; border-radius:12px; background:#f8f8f8;">
+        No hay profesionales creados.<br>
+        <b>Creá uno</b> para acceder a la configuración.
+      </div>
+    `;
+    return;
+  }
+      
+      cont.innerHTML = "";
+      list.forEach(p=>{
+        const box = document.createElement("div");
+        box.className = "profesional";
+        box.innerHTML = `
+          <h3>${p.nombre}</h3>
+          <div class="actions">
+            <button class="btn-edit">Configurar Turnos</button>
+            <button class="btn-danger btn-clear">Limpiar Turnos</button>
+            <button class="btn-danger btn-delete">Eliminar Profesional</button>
+          </div>
+          <div class="editor" style="display:none"></div>
+        `;
+        box.querySelector(".btn-edit").onclick = ()=> abrirEditor(box.querySelector(".editor"), p);
+        box.querySelector(".btn-clear").onclick = ()=> eliminarTurnos(p.profesionalId);
+        box.querySelector(".btn-delete").onclick = ()=> eliminarProfesional(p.profesionalId);
+        cont.appendChild(box);
+      });
+    }
+
+    function abrirEditor(editorEl, prof){
+      if(editorEl.dataset.open==="1"){ editorEl.style.display="none"; editorEl.dataset.open=""; return; }
+      editorEl.dataset.open="1";
+      editorEl.style.display="block";
+      editorEl.innerHTML = `
+        <div class="toolbar">
+          <div class="left">
+            <label>Intervalo
+              <select id="intervalo_${prof.profesionalId}">
+                <option value="10">10 min</option>
+                <option value="15">15 min</option>
+                <option value="20">20 min</option>
+                <option value="30" selected>30 min</option>
+                <option value="60">60 min</option>
+              </select>
+            </label>
+            <button class="btn-link" id="genTodos_${prof.profesionalId}">⚡ Generar +</button>
+            <span class="mini">Tip: primero elegí intervalo y rangos, luego generá</span>
+          </div>
+          <div class="right">
+            <button id="guardar_${prof.profesionalId}" class="guardar-btn">Guardar cambios</button>
+          </div>
+        </div>
+        <div class="week" id="week_${prof.profesionalId}"></div>
+        <div class="footerBar"><span class="status" id="status_${prof.profesionalId}"></span></div>
+      `;
+      const week = editorEl.querySelector(`#week_${prof.profesionalId}`);
+      dias.forEach(d=>{
+        const id = `${prof.profesionalId}_${d}`;
+        const day = document.createElement("div");
+        day.className="day";
+        day.innerHTML = `
+          <h4>${d}</h4>
+          <div class="range">
+            Desde <input type="time" id="desde_${id}" value="09:00">
+            hasta <input type="time" id="hasta_${id}" value="17:00">
+            <button class="btn-link" id="gen_${id}">Generar</button>
+            <button class="btn-link" id="sel_${id}">Selec +</button>
+            <button class="btn-link" id="clr_${id}">Selec -</button>
+          </div>
+          <div class="slots" id="slots_${id}"></div>
+        `;
+        week.appendChild(day);
+        day.querySelector(`#gen_${id}`).onclick = ()=> generarSlots(prof.profesionalId, d);
+        day.querySelector(`#sel_${id}`).onclick = ()=> seleccionarTodo(prof.profesionalId, d, true);
+        day.querySelector(`#clr_${id}`).onclick = ()=> seleccionarTodo(prof.profesionalId, d, false);
+        day.querySelector(`#slots_${id}`).addEventListener("click", toggleSlot);
+      });
+      editorEl.querySelector(`#genTodos_${prof.profesionalId}`).onclick = ()=> generarTodos(prof.profesionalId);
+      editorEl.querySelector(`#guardar_${prof.profesionalId}`).onclick = ()=> guardarTurnos(prof.profesionalId);
+    }
+
+    function toggleSlot(e){ const el = e.target; if(!el.classList.contains("slot")) return; el.classList.toggle("selected"); }
+    function timeStrToParts(t){ const [h,m]=t.split(":").map(n=>parseInt(n,10)); return {h,m}; }
+    function nextTime(h,m,step){ m+=step; while(m>=60){m-=60; h++;} return {h,m}; }
+    function toHHMM(h,m){ return `${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}`; }
+    function generarSlots(profId, dia){ /* igual que antes */ 
+      const interval = parseInt(document.getElementById(`intervalo_${profId}`).value,10);
+      const desde = document.getElementById(`desde_${profId}_${dia}`).value;
+      const hasta = document.getElementById(`hasta_${profId}_${dia}`).value;
+      const target = document.getElementById(`slots_${profId}_${dia}`);
+      target.innerHTML = "";
+      let {h, m} = timeStrToParts(desde); const end = timeStrToParts(hasta);
+      while (h < end.h || (h===end.h && m < end.m)) {
+        const hora = toHHMM(h,m);
+        const span = document.createElement("span"); span.className = "slot selected"; span.dataset.dia = dia; span.dataset.hora = hora; span.textContent = hora;
+        target.appendChild(span); ({h,m} = nextTime(h,m,interval));
+      }
+    }
+    function generarTodos(profId){ dias.forEach(d=>generarSlots(profId,d)); }
+    function seleccionarTodo(profId, dia, value){ const cont = document.getElementById(`slots_${profId}_${dia}`); cont.querySelectorAll(".slot").forEach(s=>{ s.classList.toggle("selected", !!value); }); }
+
+    async function guardarTurnos(profId){
+      showLoader("Guardando cambios…");
+      const btn = document.getElementById(`guardar_${profId}`);
+      const status = document.getElementById(`status_${profId}`);
+      btn.disabled = true;
+      const all = [];
+      dias.forEach(d=>{
+        const cont = document.getElementById(`slots_${profId}_${d}`);
+        cont.querySelectorAll(".slot").forEach(s=>{ all.push({dia: s.dataset.dia, hora: s.dataset.hora, visible: s.classList.contains("selected") ? 1 : 0}); });
+      });
+      try{
+        const fd = new FormData();
+        fd.append("action","saveTurnosStandard");
+        fd.append("profesionalId", profId);
+        fd.append("turnos", JSON.stringify(all));
+        const res = await fetch(API_URL, { method:"POST", body: fd });
+        const data = await res.json();
+        if(data.status==="ok"){ status.textContent = "✅ Se guardaron los horarios exitosamente."; status.className = "status ok"; }
+        else{ status.textContent = "❌ Error al guardar"; status.className = "status err"; }
+      }catch{ status.textContent = "❌ Error de conexión al guardar."; status.className = "status err"; }
+      finally{ btn.disabled = false; hideLoader(); }
+    }
+
+    async function eliminarTurnos(profId){
+      if(!confirm("¿Seguro que quieres limpiar todos los turnos de este profesional?")) return;
+      showLoader("Limpiando turnos…");
+      const fd = new FormData(); fd.append("action","saveTurnosStandard"); fd.append("profesionalId", profId); fd.append("turnos", JSON.stringify([]));
+      try{
+        const res = await fetch(API_URL, { method:"POST", body:fd });
+        const data = await res.json();
+        if(data.status==="ok") alert("Turnos eliminados."); else alert("No se pudo limpiar.");
+      }catch{ alert("Error de conexión."); }
+      hideLoader();
+    }
+
+    async function agregarProfesional(){
+      if(!userId){ alert("Falta userId."); return; }
+      const nombre = prompt("Nombre del profesional:"); if(!nombre) return;
+      showLoader("Creando profesional…");
+      const fd = new FormData(); fd.append("action","addProfessional"); fd.append("userId", userId); fd.append("nombre", nombre);
+      const res = await fetch(API_URL, { method:"POST", body:fd }); const data = await res.json();
+      if(data.status==="ok"){ await cargarProfesionales(); } else{ alert("No se pudo agregar"); }
+      hideLoader();
+    }
+
+    async function eliminarProfesional(profesionalId){
+      if(!confirm("¿Seguro que querés eliminar este profesional?")) return;
+      showLoader("Eliminando profesional…");
+      const fd = new FormData(); fd.append("action", "eliminarProfesional"); fd.append("profesionalId", profesionalId); fd.append("userId", userId);
+      try{ const res = await fetch(API_URL, { method:"POST", body: fd }); const data = await res.json();
+        if (data.status === "ok") { alert("Profesional eliminado con éxito"); await cargarProfesionales(); }
+        else { alert("No se pudo eliminar"); }
+      } catch{ alert("Error de conexión."); }
+      hideLoader();
+    }
+
+    document.addEventListener("DOMContentLoaded", init);
+  </script>
+</body>
+</html>
