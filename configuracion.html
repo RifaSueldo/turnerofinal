@@ -276,12 +276,13 @@ list.forEach(p => {
 
   btnEdit.onclick = () => {
     if (btnEdit.textContent === "Configurar Turnos") {
-      // Abrimos editor usando tu función
-      abrirEditor(editor, p);       
+      // Abrimos editor usando tu función, solo abre y carga contenido
+      abrirEditor(editor, p);
+      editor.style.display = "block";   // nos aseguramos que se muestre
       btnEdit.textContent = "Cerrar";
     } else {
       // Cerramos editor manualmente
-      editor.style.display = "none"; 
+      editor.style.display = "none";
       btnEdit.textContent = "Configurar Turnos";
     }
   };
