@@ -368,17 +368,41 @@
       }catch{ alert("Error de conexión."); }
       hideLoader();
     }
+async function agregarProfesional() {
+  if (!userId) { 
+    alert("Falta userId."); 
+    return; 
+  }
 
-    async function agregarProfesional(){
-      if(!userId){ alert("Falta userId."); return; }
-      const nombre = prompt("Nombre del profesional:"); if(!nombre) return;
-      showLoader("Creando profesional…");
-      const fd = new FormData(); fd.append("action","addProfessional"); fd.append("userId", userId); fd.append("nombre", nombre);
-      const res = await fetch(API_URL, { method:"POST", body:fd }); const data = await res.json();
-      if(data.status==="ok"){ await cargarProfesionales(); } else{ alert("No se pudo agregar"); }
+  const nombre = prompt("Nombre del profesional:");
+  if (!nombre) return;
+
+  showLoader("Creando profesional…");
+
+  try {
+    const fd = new FormData();
+    fd.append("action", "addProfessional");
+    fd.append("userId", userId);
+    fd.append("nombre", nombre);
+
+    const res = await fetch(API_URL, { method: "POST", body: fd });
+    const data = await res.json();
+
+    if (data.status === "ok") {
+      hideLoader(); // 🔹 cierro loader apenas tengo respuesta OK
+      // 🔹 Actualizo la lista en paralelo (no bloquea la UI)
+      cargarProfesionales().catch(err => console.error("Error recargando:", err));
+    } else {
       hideLoader();
+      alert("No se pudo agregar");
     }
-
+  } catch (err) {
+    hideLoader();
+    alert("⚠️ Error de conexión con el servidor");
+    console.error(err);
+  }
+}
+    
     async function eliminarProfesional(profesionalId){
       if(!confirm("¿Seguro que querés eliminar este profesional?")) return;
       showLoader("Eliminando profesional…");
