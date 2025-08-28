@@ -36,7 +36,20 @@
     .slot{ padding:8px 12px; border-radius:10px; border:1px solid var(--gris); font-weight:700; font-size:14px; background:#eee; color:#666; cursor:pointer; user-select:none; transition:.15s; }
     .slot.selected{ background:var(--morado); color:#fff; border-color:var(--morado) }
     .mini{ font-size:12px; opacity:.8; margin-left:4px }
-    .footerBar{ display:flex; justify-content:center; margin-top:14px }
+    .footerBar {
+  position: fixed;
+  top: 50%;              /* vertical centro */
+  left: 50%;             /* horizontal centro */
+  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  background: rgba(0,0,0,0.7);
+  color: #fff;
+  padding: 15px 25px;
+  border-radius: 12px;
+  z-index: 9999;
+  font-size: 18px;
+}
     .status{ margin-top:10px; text-align:center; font-size:14px }
     .status.ok{ color:var(--ok) }
     .status.err{ color:var(--err) }
