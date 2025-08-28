@@ -292,7 +292,47 @@ td.seleccionado {
    button{  background:#25213C; color:#5F48D7; border:none; border-radius:12px; padding:12px 16px; font-weight:700; cursor:pointer; transition:.2s transform,.2s background; font-size:15px; flex:1; }
     button:hover{ transform:translateY(-2px); background:#ffffff25; color:#fff; }
 
-    
+ .cal-header {
+  display: flex;
+  align-items: center;       /* centra verticalmente */
+  justify-content: center;   /* centra el mes en desktop */
+  gap: 20px;                 /* separación entre mes y flechas */
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.month-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #25213C;
+  color: #5F48D7;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 10px;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+#prevMonth {
+  left: 10px; /* separación del borde izquierdo */
+}
+
+#nextMonth {
+  right: 10px; /* separación del borde derecho */
+}
+
+/* responsive */
+@media (max-width: 480px) {
+  .cal-header h2 {
+    font-size: 1rem;
+  }
+  .month-arrow {
+    padding: 4px 8px;
+    font-size: 16px;
+  }
+}
+   
 
 </style>
 </head>
@@ -348,7 +388,14 @@ td.seleccionado {
     
   </div>
 
-<div id="calendarioContainer"></div>
+<div id="calendarioContainer">
+<div class="cal-header">
+  <button id="prevMonth" class="month-arrow">←</button>
+  <h2 id="mesActual">Agosto 2025</h2>
+  <button id="nextMonth" class="month-arrow">→</button>
+</div>
+  
+</div>
 <div id="ticketsContainer"></div>
 
 <script>
