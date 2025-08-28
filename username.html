@@ -305,11 +305,111 @@ header {
     .login-btn:hover {
       background-color: #533482;
     }
-     
+        .grid {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+  align-items: center;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.rect {
+  width: 80px;
+  height: 120px;
+  border: 2px solid #5F48D750;
+  border-radius: 12px;
+}
+
+.rect.filled {
+  background: #412866;
+}
+
+.down .rect {
+  animation: moveDown 20s linear infinite;
+}
+
+.up .rect {
+  animation: moveUp 20s linear infinite;
+}
+
+/* Arrancan desde arriba de la pantalla y van hacia abajo */
+@keyframes moveDown {
+  0%   { transform: translateY(-150vh); opacity: 0; }
+  10%  { opacity: 1; }
+  100% { transform: translateY(150vh); opacity: 0; }
+}
+
+/* Arrancan desde abajo y suben hacia arriba */
+@keyframes moveUp {
+  0%   { transform: translateY(150vh); opacity: 0; }
+  10%  { opacity: 1; }
+  100% { transform: translateY(-150vh); opacity: 0; }
+}
+/* Para ocultar/mostrar con el atributo hidden */
+[hidden] { display: none !important; } 
 </style>
 
 </head>
 <body>
+<div class="grid">
+  <div class="col down">
+    <div class="rect filled"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect filled"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+  </div>
+  <div class="col up">
+    <div class="rect"></div>
+    <div class="rect filled"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+     <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect filled"></div>
+  </div>
+  <div class="col down">
+   <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect filled"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    
+    <div class="rect"></div>
+    <div class="rect"></div>
+   <div class="rect filled"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+  </div>
+</div>
+  
+  
  <header>
   <!-- Logo del usuario -->
 <div id="floatingLogo">
