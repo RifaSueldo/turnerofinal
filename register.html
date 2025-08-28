@@ -214,8 +214,7 @@
 
         if (data.status === "ok") {
          
-  // 🔹 Guardamos el username en localStorage
-  localStorage.setItem("username", data.username.toLowerCase());
+  
 
           // 🔹 Ocultamos el formulario
         document.getElementById("registerForm").style.display = "none";
@@ -230,9 +229,10 @@
   `;
  
 
-document.getElementById("ingresarPanel").onclick = () => {
-    window.location.href = "/creditos.html";
-  };
+document.getElementById("ingresarPanel").onclick = () => { 
+  const username = encodeURIComponent(data.username.toLowerCase());
+  window.location.href = https://turnox.pro/${username}; 
+};
 
 
         } else {
