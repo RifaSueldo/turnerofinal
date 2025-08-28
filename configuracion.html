@@ -275,12 +275,13 @@ list.forEach(p => {
   const editor = box.querySelector(".editor");
 
   btnEdit.onclick = () => {
-    if (editor.style.display === "none" || editor.style.display === "") {
-      editor.style.display = "block";          // mostramos editor
-      btnEdit.textContent = "Cerrar";           // cambiamos texto
-      abrirEditor(editor, p);                    // tu lógica para cargar slots
+    if (btnEdit.textContent === "Configurar Turnos") {
+      // Abrimos editor usando tu función
+      abrirEditor(editor, p);       
+      btnEdit.textContent = "Cerrar";
     } else {
-      editor.style.display = "none";           // ocultamos editor
+      // Cerramos editor manualmente
+      editor.style.display = "none"; 
       btnEdit.textContent = "Configurar Turnos";
     }
   };
