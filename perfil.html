@@ -31,10 +31,127 @@
   #status a:hover { background:#ffffff25; color:#fff; }
   .btn-volver { font-family:"Montserrat",sans-serif; background:#25213C; color:#5F48D7; border:none; padding:12px 40px; border-radius:12px; font-size:16px; cursor:pointer; transition:background 0.2s; text-decoration:none; }
   .btn-volver:hover { background:#ffffff25; color:#fff; }
+
+  #logoFile {
+  display: none; /* ocultamos el input original */
+}
+  .custom-file-btn {
+  display: inline-block;
+  background: #25213C;
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 12px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s;
+  margin-bottom: 10px;
+}
+.custom-file-btn:hover {
+  background: #ffffff25;
+}
+.grid {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+  align-items: center;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.rect {
+  width: 80px;
+  height: 120px;
+  border: 2px solid #5F48D750;
+  border-radius: 12px;
+}
+
+.rect.filled {
+  background: #412866;
+}
+
+.down .rect {
+  animation: moveDown 20s linear infinite;
+}
+
+.up .rect {
+  animation: moveUp 20s linear infinite;
+}
+
+/* Arrancan desde arriba de la pantalla y van hacia abajo */
+@keyframes moveDown {
+  0%   { transform: translateY(-150vh); opacity: 0; }
+  10%  { opacity: 1; }
+  100% { transform: translateY(150vh); opacity: 0; }
+}
+
+/* Arrancan desde abajo y suben hacia arriba */
+@keyframes moveUp {
+  0%   { transform: translateY(150vh); opacity: 0; }
+  10%  { opacity: 1; }
+  100% { transform: translateY(-150vh); opacity: 0; }
+}
+/* Para ocultar/mostrar con el atributo hidden */
+[hidden] { display: none !important; }
+
 </style>
 </head>
 <body>
-
+<div class="grid">
+  <div class="col down">
+    <div class="rect filled"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect filled"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+  </div>
+  <div class="col up">
+    <div class="rect"></div>
+    <div class="rect filled"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+     <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect filled"></div>
+  </div>
+  <div class="col down">
+   <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect filled"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    
+    <div class="rect"></div>
+    <div class="rect"></div>
+   <div class="rect filled"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+    <div class="rect"></div>
+  </div>
+</div>
 <!-- Header -->
 <div class="header-info">
   <h2 class="user-pill">¡Hola! <span id="usernameDisplay"></span></h2>
@@ -45,9 +162,10 @@
     <h2>Publicá tu logo!</h2>
 
     <!-- Subida a ImgBB -->
-    <input type="file" id="logoFile" accept="image/*">
-    <button id="uploadBtn" style="margin-bottom: 10px">Subir a ImgBB</button>
-<p style="font-size: 10px">Tip: Primero subí tu logo, se genera un link, luego presionas "Guardar Logo""</p>
+   <label for="logoFile" class="custom-file-btn">Seleccionar Logo</label>
+<input type="file" id="logoFile" accept="image/*">
+    <button id="uploadBtn" style="margin-bottom: 10px">Subir</button>
+<p style="font-size: 10px">Tip: Primero seleciona y subí tu logo, se genera un link, luego presionas "Guardar Logo""</p>
     
     <!-- Preview y link -->
     <input type="url" id="logoUrl" placeholder="Link del logo" required>
@@ -102,7 +220,7 @@ uploadBtn.addEventListener("click", async () => {
       console.log(data);
       if (data.success) {
         const url = data.data.url;
-        status.innerText = "✅ Logo subido! URL copiada al campo de texto";
+        status.innerText = "Logo subido! URL copiada al campo de texto";
         logoInput.value = url; // poner URL en el input
         preview.innerHTML = `<img src="${url}" alt="Logo">`;
         saveBtn.disabled = false; // habilitar botón guardar
@@ -122,7 +240,7 @@ saveBtn.addEventListener("click", async () => {
   const logoUrl = logoInput.value.trim();
   if (!logoUrl || !userId) return;
 
-  status.innerText = "Guardando logo en la hoja de cálculo...";
+  status.innerText = "Guardando logo...";
 
   try {
     const res = await fetch("https://script.google.com/macros/s/AKfycbwSHPQD3ZXVqMpPZ1E2cA9_ELs8hxScPkeEs5ReZ-_MwqZ9Wt3qvIgGy6pVk6STCebKBw/exec", {
