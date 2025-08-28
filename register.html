@@ -213,7 +213,10 @@
         const data = await res.json();
 
         if (data.status === "ok") {
-          
+         
+  // 🔹 Guardamos el username en localStorage
+  localStorage.setItem("username", data.username.toLowerCase());
+
           // 🔹 Ocultamos el formulario
         document.getElementById("registerForm").style.display = "none";
           
@@ -225,12 +228,12 @@
     
     <button id="ingresarPanel" style="margin-top:10px; padding:8px 16px; cursor:pointer;">Ir a tu sitio.</button>
   `;
- document.getElementById("ingresarPanel").onclick = () => {
-  const username = encodeURIComponent(data.username.toLowerCase());
-  window.location.href = `https://turnox.pro/${username}`;
-};
+ 
 
-
+document.getElementById("ingresarPanel").onclick = () => {
+    window.location.href = "/creditos.html";
+  };
+}
 
         } else {
           msg.style.color = "white";
