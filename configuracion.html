@@ -255,26 +255,43 @@
     `;
     return;
   }
+
       
       cont.innerHTML = "";
-      list.forEach(p=>{
-        const box = document.createElement("div");
-        box.className = "profesional";
-        box.innerHTML = `
-          <h3>${p.nombre}</h3>
-          <div class="actions">
-            <button class="btn-edit">Configurar Turnos</button>
-            <button class="btn-danger btn-clear">Limpiar Turnos</button>
-            <button class="btn-danger btn-delete">Eliminar Profesional</button>
-          </div>
-          <div class="editor" style="display:none"></div>
-        `;
-        box.querySelector(".btn-edit").onclick = ()=> abrirEditor(box.querySelector(".editor"), p);
-        box.querySelector(".btn-clear").onclick = ()=> eliminarTurnos(p.profesionalId);
-        box.querySelector(".btn-delete").onclick = ()=> eliminarProfesional(p.profesionalId);
-        cont.appendChild(box);
-      });
+list.forEach(p => {
+  const box = document.createElement("div");
+  box.className = "profesional";
+  box.innerHTML = `
+    <h3>${p.nombre}</h3>
+    <div class="actions">
+      <button class="btn-edit">Configurar Turnos</button>
+      <button class="btn-danger btn-clear">Limpiar Turnos</button>
+      <button class="btn-danger btn-delete">Eliminar Profesional</button>
+    </div>
+    <div class="editor" style="display:none"></div>
+  `;
+
+  const btnEdit = box.querySelector(".btn-edit");
+  const editor = box.querySelector(".editor");
+
+  btnEdit.onclick = () => {
+    if (editor.style.display === "none" || editor.style.display === "") {
+      editor.style.display = "block";          // mostramos editor
+      btnEdit.textContent = "Cerrar";           // cambiamos texto
+      abrirEditor(editor, p);                    // tu lógica para cargar slots
+    } else {
+      editor.style.display = "none";           // ocultamos editor
+      btnEdit.textContent = "Configurar Turnos";
     }
+  };
+
+  box.querySelector(".btn-clear").onclick = () => eliminarTurnos(p.profesionalId);
+  box.querySelector(".btn-delete").onclick = () => eliminarProfesional(p.profesionalId);
+
+  cont.appendChild(box);
+});
+
+      
 
     function abrirEditor(editorEl, prof){
       if(editorEl.dataset.open==="1"){ editorEl.style.display="none"; editorEl.dataset.open=""; return; }
