@@ -359,11 +359,11 @@ const storedUsername = localStorage.getItem("username");
 
 if (!storedUserId || !storedUsername) {
   alert("No hay usuario logueado");
-  window.location.href = "login.html"; // o index.html, pero solo uno
+  window.location.href = "login.html"; 
 }
 
 let username = storedUsername;
-  
+
 document.addEventListener("DOMContentLoaded", ()=>{
   document.getElementById("usernameDisplay").textContent = username;
 });
@@ -371,12 +371,13 @@ document.addEventListener("DOMContentLoaded", ()=>{
 let turnosUsuario = [];
 let turnosPorFecha = {};
 let selectedDate = new Date();
+let currentYear = selectedDate.getFullYear();
+let currentMonth = selectedDate.getMonth();
 
 async function cargarTurnosUsuario() {
   try {
     const res = await fetch(`${API_URL}?action=getTurnosUsuario&username=${username}`);
     const data = await res.json();
-    console.log("Respuesta API:", data);
 
     turnosUsuario = [];
     turnosPorFecha = {};
@@ -388,7 +389,6 @@ async function cargarTurnosUsuario() {
       });
     }
 
-    // Agrupar por fecha (normalizando a YYYY-MM-DD)
     turnosUsuario.forEach(t=>{
       let fechaSolo = t.fecha;
       if(fechaSolo.includes("/")){
@@ -400,16 +400,14 @@ async function cargarTurnosUsuario() {
       if(!turnosPorFecha[fechaSolo]) turnosPorFecha[fechaSolo] = [];
       turnosPorFecha[fechaSolo].push(t);
     });
-    
-    // Configurar la fecha seleccionada como hoy
-    selectedDate = new Date(); // Añadir esta línea
 
-    // Renderizar el calendario y resaltar hoy
-    renderCalendario(selectedDate.getFullYear(), selectedDate.getMonth());
-    
-    // Mostrar turnos del día de hoy automáticamente
+    selectedDate = new Date(); 
+    currentYear = selectedDate.getFullYear();
+    currentMonth = selectedDate.getMonth();
+
+    renderCalendario(currentYear, currentMonth);
+
     const hoyStr = selectedDate.toISOString().split("T")[0];
-    // Marcar la fecha en el calendario como seleccionada
     document.querySelectorAll("#calendarioContainer td").forEach(td => {
       if(td.dataset.fecha === hoyStr){
         td.classList.add("seleccionado");
@@ -417,8 +415,9 @@ async function cargarTurnosUsuario() {
         td.classList.remove("seleccionado");
       }
     });
-    // Mostrar los turnos de hoy
+
     renderTickets(hoyStr);
+
   }catch(e){ 
     console.error(e); 
     document.getElementById("ticketsContainer").innerHTML="<p>Error al cargar turnos.</p>"; 
@@ -430,7 +429,15 @@ function renderCalendario(year, month){
   const firstDay = new Date(year, month, 1);
   const lastDay = new Date(year, month+1, 0);
   const container = document.getElementById("calendarioContainer");
-  container.innerHTML = `<h2>${firstDay.toLocaleString("es-ES",{month:"long",year:"numeric"})}</h2>`;
+
+  // Flechas y mes
+  container.innerHTML = `
+    <div class="cal-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+      <button id="prevMonth">←</button>
+      <h2 id="mesActual">${firstDay.toLocaleString("es-ES",{month:"long",year:"numeric"})}</h2>
+      <button id="nextMonth">→</button>
+    </div>
+  `;
 
   let html = "<table><tr>";
   const diasSemana=["Dom","Lun","Mar","Mié","Jue","Vie","Sáb"];
@@ -439,7 +446,6 @@ function renderCalendario(year, month){
 
   for(let i=0; i<firstDay.getDay(); i++){ html+="<td></td>"; }
 
-  // 👇 ESTE for lo reemplazamos
   for(let d=1; d<=lastDay.getDate(); d++){
     const fecha = new Date(year, month, d);
     const fechaStr = fecha.toISOString().split("T")[0];
@@ -450,18 +456,13 @@ function renderCalendario(year, month){
       classes.push("pasado");
     }
     if(tieneTurnos) classes.push("conTurnos");
-
-    // 🔹 Agregamos: marcar "hoy"
     if(fecha.toDateString() === today.toDateString()){
       classes.push("hoy");
     }
-
-    // 🔹 Agregamos: marcar la fecha seleccionada
     if(fechaStr === selectedDate.toISOString().split("T")[0]){
       classes.push("seleccionado");
     }
 
-    // 🔹 Cambiamos el onclick para que use clickDia(this)
     html += `<td class="${classes.join(" ")}" data-fecha="${fechaStr}" onclick="clickDia(this)">${d}</td>`;
 
     if(fecha.getDay()===6 && d!==lastDay.getDate()) html+="</tr><tr>";
@@ -469,17 +470,27 @@ function renderCalendario(year, month){
 
   html+="</tr></table>";
   container.innerHTML += html;
+
+  // Eventos flechas
+  document.getElementById("prevMonth").onclick = () => {
+    if(currentMonth === 0){ currentMonth = 11; currentYear--; }
+    else currentMonth--;
+    renderCalendario(currentYear, currentMonth);
+  };
+
+  document.getElementById("nextMonth").onclick = () => {
+    if(currentMonth === 11){ currentMonth = 0; currentYear++; }
+    else currentMonth++;
+    renderCalendario(currentYear, currentMonth);
+  };
 }
+
 function clickDia(td){
-  // quitar selección previa
   document.querySelectorAll("#calendarioContainer td").forEach(el=>{
     el.classList.remove("seleccionado");
   });
-  // marcar nuevo día
   td.classList.add("seleccionado");
-  // actualizar variable global
   selectedDate = new Date(td.dataset.fecha);
-  // mostrar turnos de ese día
   renderTickets(td.dataset.fecha);
 }
 
