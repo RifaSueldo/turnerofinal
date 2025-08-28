@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Pago pendiente - TurnoX</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="color-scheme" content="light">
+  <meta name="supported-color-schemes" content="light">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="https://i.ibb.co/p6Ycq6XC/Turnox-logo.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+  <style>
+    :root { color-scheme: light only; }
+    body {
+      font-family: "Montserrat", sans-serif;
+      background-color: #4B2E78;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+    .container {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+      z-index: 1;
+      position: relative;
+    }
+    h1 {
+      font-size: 28px;
+      color: #F1C40F;
+    }
+    p { font-size: 18px; }
+    .btn-volver {
+      font-family: "Montserrat", sans-serif;
+      background: #25213C;
+      color: #F1C40F;
+      border: none;
+      padding: 12px 40px;
+      border-radius: 12px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.2s;
+      text-decoration: none;
+    }
+    .btn-volver:hover {
+      background: #ffffff25;
+      color: #fff;
+    }
+    .grid {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      display: flex;
+      gap: 30px;
+      justify-content: center;
+      align-items: center;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .col { display: flex; flex-direction: column; gap: 20px; }
+    .rect {
+      width: 80px; height: 120px;
+      border: 2px solid #5F48D750;
+      border-radius: 12px;
+    }
+    .rect.filled { background: #412866; }
+    .down .rect { animation: moveDown 20s linear infinite; }
+    .up .rect { animation: moveUp 20s linear infinite; }
+    @keyframes moveDown {
+      0% { transform: translateY(-150vh); opacity: 0; }
+      10% { opacity: 1; }
+      100% { transform: translateY(150vh); opacity: 0; }
+    }
+    @keyframes moveUp {
+      0% { transform: translateY(150vh); opacity: 0; }
+      10% { opacity: 1; }
+      100% { transform: translateY(-150vh); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="grid">
+    <div class="col down"><div class="rect filled"></div><div class="rect"></div><div class="rect"></div></div>
+    <div class="col up"><div class="rect"></div><div class="rect filled"></div><div class="rect"></div></div>
+    <div class="col down"><div class="rect"></div><div class="rect"></div><div class="rect filled"></div></div>
+  </div>
+
+  <div class="container">
+    <h1>⌛ Pago pendiente</h1>
+    <p>Tu pago está siendo procesado. Te avisaremos cuando se confirme.</p>
+    <a class="btn-volver" href="/creditos">⬅ Volver</a>
+  </div>
+</body>
+</html>
