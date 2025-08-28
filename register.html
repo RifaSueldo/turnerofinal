@@ -212,9 +212,20 @@
 
         const data = await res.json();
 
-        
-
         if (data.status === "ok") {
+         // --- Enviar aviso por WhatsApp ---
+      const mensaje = encodeURIComponent(
+        `🔔 Nueva cuenta creada:\n` +
+        `Usuario: ${username}\n` +
+        `Email: ${email}`
+      );
+
+      const phone = "5493434477577";
+      const apikey = "9663015";
+
+      fetch(`https://api.callmebot.com/whatsapp.php?phone=${phone}&text=${mensaje}&apikey=${apikey}`)
+        .then(() => console.log("Aviso enviado por WhatsApp"))
+        .catch(err => console.error("Error enviando WhatsApp", err)); 
           
           // 🔹 Ocultamos el formulario
         document.getElementById("registerForm").style.display = "none";
