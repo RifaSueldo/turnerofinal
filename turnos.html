@@ -566,6 +566,12 @@ function renderTickets(fechaStr){
   turnos.forEach(t=>{
     const div = document.createElement("div");
     div.className="ticket";
+
+    // Preparar mensaje de recordatorio para WhatsApp
+    const mensaje = encodeURIComponent(`Recordatorio: Te esperamos ${fechaBonita} a las ${t.hora} en ${username}. (${t.profesional})`);
+    const whatsappLink = t.whatsapp ? `https://wa.me/${t.whatsapp}?text=${mensaje}` : null;
+
+
     div.innerHTML=`
       <h3>TurnoX</h3>
       <div class="hora">${t.hora}</div>
@@ -576,7 +582,8 @@ function renderTickets(fechaStr){
       <p><strong>WhatsApp:</strong> ${t.whatsapp || ""}</p>
       <p><strong>DNI:</strong> ${t.dni}</p>
       <p><strong>Comentario:</strong> ${t.comentario || ""}</p>
-      <button onclick="eliminarTurno('${t.fecha}','${t.hora}','${t.profesionalId}','${t.dni}')">Eliminar turno</button>
+      
+      ${whatsappLink ? `<button onclick="window.open('${whatsappLink}','_blank')">Recordatorio Manual</button>` : `<button disabled>Sin WhatsApp</button>`}
     `;
     grid.appendChild(div);
   });
