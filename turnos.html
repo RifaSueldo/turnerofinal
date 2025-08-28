@@ -295,16 +295,12 @@ td.seleccionado {
  .cal-header {
   display: flex;
   align-items: center;       /* centra verticalmente */
-  justify-content: center;   /* centra el mes en desktop */
-  gap: 20px;                 /* separación entre mes y flechas */
+  justify-content: center;   /* todo centrado */
+  gap: 12px;                 /* espacio entre flechas y mes */
   margin-bottom: 10px;
-  position: relative;
 }
 
 .month-arrow {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
   background: #25213C;
   color: #5F48D7;
   border: none;
@@ -314,6 +310,19 @@ td.seleccionado {
   font-size: 18px;
 }
 
+/* responsive */
+@media (max-width: 480px) {
+  .cal-header {
+    gap: 8px;
+  }
+  .cal-header h2 {
+    font-size: 1rem;
+  }
+  .month-arrow {
+    padding: 4px 8px;
+    font-size: 16px;
+  }
+}
 #prevMonth {
   left: 10px; /* separación del borde izquierdo */
 }
@@ -477,15 +486,16 @@ function renderCalendario(year, month){
   const lastDay = new Date(year, month+1, 0);
   const container = document.getElementById("calendarioContainer");
 
+
   // Flechas y mes
   container.innerHTML = `
-    <div class="cal-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-      <button id="prevMonth" style= "max-width: 120px; max-height: 60px;"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="18" viewBox="0 0 60 24" fill="none" stroke="#F4EDFF" stroke-width="2" stroke-linecap="butt" stroke-linejoin="miter">
+    <div class="cal-header" >
+      <button id="prevMonth" lass="month-arrow"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="18" viewBox="0 0 60 24" fill="none" stroke="#F4EDFF" stroke-width="2" stroke-linecap="butt" stroke-linejoin="miter">
       <line x1="58" y1="12" x2="8" y2="12"></line>
       <polyline points="16,4 2,12 16,20"></polyline>
     </svg></button>
       <h2 id="mesActual">${firstDay.toLocaleString("es-ES",{month:"long",year:"numeric"})}</h2>
-      <button id="nextMonth" style= "max-width: 120px; max-height: 60px;"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="18" viewBox="0 0 60 24" fill="none" stroke="#F4EDFF" stroke-width="2" stroke-linecap="butt" stroke-linejoin="miter">
+      <button id="nextMonth" class="month-arrow"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="18" viewBox="0 0 60 24" fill="none" stroke="#F4EDFF" stroke-width="2" stroke-linecap="butt" stroke-linejoin="miter">
       <line x1="2" y1="12" x2="52" y2="12"></line>
       <polyline points="44,4 58,12 44,20"></polyline>
     </svg></button>
