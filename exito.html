@@ -105,7 +105,7 @@
 
  <div class="container">
  <h1>¡Pago realizado con éxito!</h1>
-  <p id="mensaje">Estamos acreditando tus créditos...</p>
+  <p id="mensaje">Estamos sumando tus créditos...</p>
    <div style="text-align:center; margin-top:20px;">
   <a id="volver" class='btn-volver' href='/creditos'>⬅ Volver</a>
 </div>
@@ -130,10 +130,10 @@
       const data = await res.json();
       if (data.ok) {
         document.getElementById('mensaje').innerText = 
-          `Se acreditaron ${cantidad} créditos. Ahora tenés un total de ${data.nuevosCreditos} créditos, ${username}.`;
+          `Se agregaron ${cantidad} créditos a tu cuenta. Ahora tenés un total de ${data.nuevosCreditos} créditos, ${username}.`;
       } else {
         document.getElementById('mensaje').innerText = 
-          `⚠️ Error al acreditar créditos: ${data.error || "desconocido"}`;
+          `⚠️ Error al agregar créditos: ${data.error || "desconocido"}`;
       }
     } catch (err) {
       document.getElementById('mensaje').innerText = `❌ Error en la conexión: ${err}`;
