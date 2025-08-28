@@ -334,29 +334,54 @@
     function generarTodos(profId){ dias.forEach(d=>generarSlots(profId,d)); }
     function seleccionarTodo(profId, dia, value){ const cont = document.getElementById(`slots_${profId}_${dia}`); cont.querySelectorAll(".slot").forEach(s=>{ s.classList.toggle("selected", !!value); }); }
 
-    async function guardarTurnos(profId){
-      showLoader("Guardando cambios…");
-      const btn = document.getElementById(`guardar_${profId}`);
-      const status = document.getElementById(`status_${profId}`);
-      btn.disabled = true;
-      const all = [];
-      dias.forEach(d=>{
-        const cont = document.getElementById(`slots_${profId}_${d}`);
-        cont.querySelectorAll(".slot").forEach(s=>{ all.push({dia: s.dataset.dia, hora: s.dataset.hora, visible: s.classList.contains("selected") ? 1 : 0}); });
-      });
-      try{
-        const fd = new FormData();
-        fd.append("action","saveTurnosStandard");
-        fd.append("profesionalId", profId);
-        fd.append("turnos", JSON.stringify(all));
-        const res = await fetch(API_URL, { method:"POST", body: fd });
-        const data = await res.json();
-        if(data.status==="ok"){ status.textContent = "✅ Se guardaron los horarios exitosamente."; status.className = "status ok"; }
-        else{ status.textContent = "❌ Error al guardar"; status.className = "status err"; }
-      }catch{ status.textContent = "❌ Error de conexión al guardar."; status.className = "status err"; }
-      finally{ btn.disabled = false; hideLoader(); }
-    }
+    async function guardarTurnos(profId) {
+  const btn = document.getElementById(`guardar_${profId}`);
+  const status = document.getElementById(`status_${profId}`);
+  btn.disabled = true;
 
+  // 🔹 Mostramos loader breve y lo quitamos rápido
+  showLoader("Guardando cambios…");
+  setTimeout(hideLoader, 800); // loader visual corto
+
+  // 🔹 Recolecto datos
+  const all = [];
+  dias.forEach(d => {
+    const cont = document.getElementById(`slots_${profId}_${d}`);
+    cont.querySelectorAll(".slot").forEach(s => {
+      all.push({
+        dia: s.dataset.dia,
+        hora: s.dataset.hora,
+        visible: s.classList.contains("selected") ? 1 : 0
+      });
+    });
+  });
+
+  try {
+    const fd = new FormData();
+    fd.append("action", "saveTurnosStandard");
+    fd.append("profesionalId", profId);
+    fd.append("turnos", JSON.stringify(all));
+
+    // 🔹 No bloqueamos la UI: esperamos pero ya sin loader
+    const res = await fetch(API_URL, { method: "POST", body: fd });
+    const data = await res.json();
+
+    if (data.status === "ok") {
+      status.textContent = "✅ Se guardaron los horarios exitosamente.";
+      status.className = "status ok";
+    } else {
+      status.textContent = "❌ Error al guardar";
+      status.className = "status err";
+    }
+  } catch {
+    status.textContent = "❌ Error de conexión al guardar.";
+    status.className = "status err";
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+   
     async function eliminarTurnos(profId){
       if(!confirm("¿Seguro que quieres limpiar todos los turnos de este profesional?")) return;
       showLoader("Limpiando turnos…");
