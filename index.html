@@ -8,7 +8,7 @@
   <!-- Fuentes -->
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#4caf50">
+<meta name="theme-color" content="#533482">
 <script>
   if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("sw.js")
@@ -151,9 +151,29 @@
 </a>
     <a href="/login" class="btn">Ya tengo una cuenta</a>
      <a href="/demo" class="btn">Ver Demo</a>
-    
+    <button id="instalarApp" class="btn">Descargá la App</button>
+
   </div>
 
+<script>
+  let deferredPrompt;
 
+  window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    document.getElementById("instalarApp").style.display = "block"; // mostrar botón
+  });
+
+  document.getElementById("instalarApp").addEventListener("click", async () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === "accepted") {
+        console.log("Usuario instaló la app");
+      }
+      deferredPrompt = null;
+    }
+  });
+</script>
 </body>
 </html>
