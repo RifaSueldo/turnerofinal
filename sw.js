@@ -10,8 +10,7 @@ self.addEventListener("install", event => {
         "/login.html",
         "/perfil.html",
         "/turnos.html",
-        "/icon-192.png",
-        "/icon-512.png"
+        
       ]);
     })
   );
