@@ -468,7 +468,7 @@ textarea::placeholder {
 <!-- Nuevo: ticket fijo -->
 <div id="ticketContainer"></div>
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbxBAuhqWsLFXN9HLfXvEhh8VEEcD9ppCEmQPkhhh0LxWwjdVnoMMMMPh1gndgwTD3ZnWQ/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbyqRNtLDpy__ieJM0a0a3KIEIirzXCFLOOVe0h55gzBUNR7y4GyL_JUunfykyTgPfrZ/exec";
 
 // ------------------ OBTENER USERNAME ------------------
 let params = new URLSearchParams(window.location.search);
@@ -489,6 +489,8 @@ let profesionales = {};
 let selectedProfId = null;
 let selectedProf = "";
 let selectedHora = "";
+let selectedHoras = []; // array de horas reservadas
+let selectedServicio = null; // servicio elegido
 
 
 // ------------------ CARGAR LOGO ------------------
@@ -620,7 +622,37 @@ async function cargarTurnos(fechaStr) {
     } else {
       Object.keys(turnosData).forEach(profId => {
         const profObj = turnosData[profId];
+
+        // guardamos el intervalo de este profesional
+        const profConfig = profesionales.find(p => p.profesionalId === profId);
+        if (profConfig) {
+          profObj.intervalo = parseInt(profConfig.intervalo) || 30; // 👈 ahora cada prof tiene su intervalo
+        }
+
         html += `<div class="turnos"><h3>${profObj.nombre}</h3>`;
+
+        // --- servicios ---
+        let servicios = [];
+        if (profConfig) {
+          for (let i = 1; i <= 10; i++) {
+            const nombre = profConfig[`servicio${i}`];
+            const duracion = profConfig[`tiempo${i}`];
+            if (typeof nombre === "string" && nombre.trim() !== "" && duracion) {
+              servicios.push({ nombre: nombre.trim(), duracion: parseInt(duracion) });
+            }
+          }
+        }
+        console.log("Servicios para", profObj.nombre, servicios);
+
+        if (servicios.length) {
+          html += `<label>Servicio: <select data-profid="${profId}" class="select-servicio">
+            <option value="">Selecciona un servicio</option>`;
+          servicios.forEach(s => {
+            html += `<option value="${s.nombre}" data-duracion="${s.duracion}">${s.nombre} (${s.duracion} min)</option>`;
+          });
+          html += `</select></label>`;
+        }
+
         if (!profObj.turnos || profObj.turnos.length === 0) {
           html += "<p>No hay turnos disponibles</p>";
         } else {
@@ -641,12 +673,26 @@ async function cargarTurnos(fechaStr) {
 
     turnosDiv.innerHTML = html;
 
-    // 🔽 Agregamos los listeners a las horas disponibles
+    // listeners turnos
     document.querySelectorAll(".hora.disponible").forEach(span => {
       span.addEventListener("click", () => {
         seleccionarTurno(span.dataset.profid, span.dataset.hora);
       });
     });
+
+    // 🔽 listeners servicios (nuevo con recalculo de disponibilidad)
+document.querySelectorAll(".select-servicio").forEach(sel => {
+  sel.addEventListener("change", e => {
+    const dur = parseInt(e.target.selectedOptions[0].dataset.duracion);
+    const profId = e.target.dataset.profid;
+
+    selectedServicio = { nombre: e.target.value, duracion: dur };
+
+    // recalcular la disponibilidad de ese profesional
+    recalcularDisponibilidad(profId, dur);
+  });
+});
+
 
   } catch (err) {
     console.error("Error cargando turnos:", err);
@@ -656,23 +702,113 @@ async function cargarTurnos(fechaStr) {
     `;
   }
 }
+// ------------------ NUEVA FUNCIÓN ------------------
+function recalcularDisponibilidad(profId, duracion) {
+  const intervalo = turnosData[profId].intervalo || 30; // intervalo real
+  const turnos = turnosData[profId].turnos;
+
+  // pasamos a mapa rápido para buscar por hora
+  const mapa = {};
+  turnos.forEach(t => mapa[t.hora] = t.estado);
+
+  turnos.forEach(t => {
+    const span = document.querySelector(`.hora[data-profid="${profId}"][data-hora="${t.hora}"]`);
+    if (!span) return;
+
+    if (t.estado !== "disponible") {
+      span.classList.remove("disponible","selected");
+      span.classList.add("bloqueado");
+      return;
+    }
+
+    // calcular cuántos bloques necesito
+    const bloques = Math.ceil(duracion / intervalo);
+
+    // verificar continuidad desde t.hora
+    let ok = true;
+    let [h,m] = t.hora.split(":").map(Number);
+
+    for (let i=0; i<bloques; i++) {
+      const horaStr = `${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}`;
+      if (mapa[horaStr] !== "disponible") {
+        ok = false;
+        break;
+      }
+      m += intervalo;
+      if (m>=60) { m=0; h++; }
+    }
+
+    if (ok) {
+      span.classList.remove("bloqueado");
+      span.classList.add("disponible");
+    } else {
+      span.classList.remove("disponible","selected");
+      span.classList.add("bloqueado");
+    }
+  });
+
+  // volver a enganchar listeners solo a los disponibles
+  document.querySelectorAll(`.hora.disponible[data-profid="${profId}"]`).forEach(span => {
+    span.onclick = () => seleccionarTurno(profId, span.dataset.hora);
+  });
+}
 
 // ------------------ SELECCIONAR TURNO ------------------
 function seleccionarTurno(profId, hora) {
+  if (!selectedServicio) {
+    alert("Selecciona un servicio primero");
+    return;
+  }
+
+  const turnosProf = turnosData[profId]?.turnos || [];
+  if (!turnosProf.length) return;
+
+  // 🔹 calcular intervalo real según la grilla
+  let intervalo = null;
+  if (turnosProf.length > 1) {
+    const [h1, m1] = turnosProf[0].hora.split(":").map(Number);
+    const [h2, m2] = turnosProf[1].hora.split(":").map(Number);
+    intervalo = (h2*60 + m2) - (h1*60 + m1);
+  }
+  if (!intervalo) {
+    alert("No se pudo calcular el intervalo de turnos");
+    return;
+  }
+
+  // 🔹 calcular bloques necesarios según duración
+  const bloques = Math.ceil(selectedServicio.duracion / intervalo);
+
+  // 🔹 buscar turnos consecutivos
+  const idx = turnosProf.findIndex(t => t.hora === hora);
+  if (idx === -1) return;
+
+  const seleccionados = [];
+  for (let i = 0; i < bloques; i++) {
+    const turno = turnosProf[idx + i];
+    if (!turno || turno.estado !== "disponible") {
+      alert("No hay turnos consecutivos suficientes para este servicio.");
+      return;
+    }
+    seleccionados.push(turno.hora);
+  }
+
+  // 🔹 guardar selección global
   selectedProfId = profId;
   selectedProf = turnosData[profId].nombre;
   selectedHora = hora;
+  selectedHoras = seleccionados;
 
-  // Quitar clase selected de cualquier hora previamente seleccionada
+  // 🔹 limpiar selección previa
   document.querySelectorAll(".hora.disponible").forEach(el => el.classList.remove("selected"));
 
-  // Agregar clase selected a la hora clickeada
-  const span = document.querySelector(`.hora.disponible[data-profid="${profId}"][data-hora="${hora}"]`);
-  if (span) span.classList.add("selected");
+  // 🔹 marcar selección actual
+  seleccionados.forEach(h => {
+    const span = document.querySelector(`.hora.disponible[data-profid="${profId}"][data-hora="${h}"]`);
+    if (span) span.classList.add("selected");
+  });
 
   mostrarFormReserva(selectedProfId, selectedHora);
 }
-
 
 // ------------------ MOSTRAR FORMULARIO ------------------
 function mostrarFormReserva(profId, hora) {
@@ -688,7 +824,9 @@ function mostrarFormReserva(profId, hora) {
   const formContainer = document.getElementById("reservaFormContainer");
   formContainer.style.display = "block";
   formContainer.innerHTML = `
-    <h2>Último paso! </h2><p style="font-size: 12px;">Completa tus datos y confirma la reserva con ${turnosData[profId].nombre} el ${fechaBonita} a las ${hora}</p>
+    <h2>Último paso! </h2><p style="font-size: 12px;">Completa tus datos y confirma la reserva con ${turnosData[profId].nombre} el ${fechaBonita} a las ${hora}
+    Servicio: ${selectedServicio.nombre} (${selectedServicio.duracion} min)<br>
+    Bloques: ${selectedHoras.join(", ")}</p>
    <form id="reservaForm">
   
   
@@ -717,7 +855,7 @@ function mostrarFormReserva(profId, hora) {
   
   <textarea id="comentario" name="comentario" placeholder="Comentario (opcional)"></textarea>
   
-  <input type="hidden" name="extra1" value="">
+  <input type="hidden" name="servicio" value="${selectedServicio.nombre}">
   <input type="hidden" name="extra2" value="">
   <input type="hidden" name="extra3" value="">
   
@@ -748,7 +886,8 @@ function mostrarFormReserva(profId, hora) {
       profesional: selectedProf,
       profesionalId: selectedProfId,
       fecha: fechaStr,
-      hora: selectedHora,
+      hora: selectedHora,          // solo la primera
+      horas: selectedHoras.join(","),  // todas en string separadas por coma
       nombre: formData.get("nombre"),
       apellido: formData.get("apellido"),
       telefono: formData.get("telefono"),
@@ -758,10 +897,13 @@ function mostrarFormReserva(profId, hora) {
       whatsapp: formData.get("whatsapp"),
       dni: formData.get("dni"),
       comentario: formData.get("comentario"),
-      extra1: formData.get("extra1"),
+      horas: selectedHoras,
+      servicio: selectedServicio.nombre,
+     
       extra2: formData.get("extra2"),
       extra3: formData.get("extra3")
     };
+    console.log("Voy a enviar reserva:", dataToSend);
     const res = await fetch(API_URL, {
       method: "POST",
       body: new URLSearchParams({action:"saveReserva", data: JSON.stringify(dataToSend)})
