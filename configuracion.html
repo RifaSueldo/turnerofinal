@@ -16,40 +16,25 @@
     .note{opacity:.95; font-size:14px; background:#25213C; color:#5F48D7;}
     button{  background:#25213C; color:#5F48D7; border:none; border-radius:12px; padding:12px 16px; font-weight:700; cursor:pointer; transition:.2s transform,.2s background; font-size:15px; flex:1; }
     button:hover{ transform:translateY(-2px); background:#ffffff25; color:#fff; }
-    button[disabled]{ opacity:.6; cursor:not-allowed; transform:none; font-family:Montserrat, }
+    button[disabled]{ opacity:.6; cursor:not-allowed; transform:none; font-family:Montserrat; }
     .profesional{ border:1px solid #ffffff30; background:#ffffff15; border-radius:14px; padding:14px; margin:12px 0; backdrop-filter: blur(3px); }
-    .profesional h3{ margin:0 0 10px 0; font-size:18px; text-align:center;  }
+    .profesional h3{ margin:0 0 10px 0; font-size:18px; text-align:center; }
     .actions{ display:flex; flex-wrap:wrap; gap:10px; margin-top:8px }
     .editor{ margin-top:12px; background:#ffffff15; color:#fff; border-radius:16px; padding:12px; backdrop-filter: blur(6px);
-    border: 1px solid #ffffff40;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-           }
+      border: 1px solid #ffffff40; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3); }
     .toolbar{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; margin-bottom:12px; }
     .toolbar .left, .toolbar .right{ display:flex; gap:8px; align-items:center; flex-wrap:wrap }
-    select, input[type=time]{ padding:10px 12px; border:1px solid var(--gris); border-radius:10px; font-weight:600; background:#fff; color:var(--texto); font-size:15px; }
+    select, input[type=time], input[type=text]{ padding:10px 12px; border:1px solid var(--gris); border-radius:10px; font-weight:600; background:#fff; color:var(--texto); font-size:15px; }
     .week{ display:grid; gap:12px; grid-template-columns:repeat(2,1fr); }
     @media (max-width:640px){ .week{ grid-template-columns:1fr } }
     .day{ border:1px solid var(--gris); border-radius:12px; padding:12px; background:#ffffff15; }
-    .day h4{ font-family:Montserrat, margin:0 0 10px 0; color:var(--morado); font-size:16px }
+    .day h4{ margin:0 0 10px 0; color:var(--morado); font-size:16px }
     .range{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-bottom:10px }
     .slots{ display:flex; flex-wrap:wrap; gap:8px }
     .slot{ padding:8px 12px; border-radius:10px; border:1px solid var(--gris); font-weight:700; font-size:14px; background:#eee; color:#666; cursor:pointer; user-select:none; transition:.15s; }
     .slot.selected{ background:var(--morado); color:#fff; border-color:var(--morado) }
     .mini{ font-size:12px; opacity:.8; margin-left:4px }
-    .footerBar {
-  position: fixed;
-  top: 200px;              /* vertical centro */
-  left: 50%;             /* horizontal centro */
-  transform: translate(-50%, -50%);
-  display: flex;
-  justify-content: center;
-  background: #25213C;
-  color: #fff;
-  padding: 15px 25px;
-  border-radius: 12px;
-  z-index: 9999;
-  font-size: 18px;
-}
+    .footerBar { position: fixed; top: 200px; left: 50%; transform: translate(-50%, -50%); display: flex; justify-content: center; background: #25213C; color: #fff; padding: 15px 25px; border-radius: 12px; z-index: 9999; font-size: 18px; }
     .status{ margin-top:10px; text-align:center; font-size:14px }
     .status.ok{ color:var(--ok) }
     .status.err{ color:var(--err) }
@@ -65,8 +50,7 @@
       background:rgba(0,0,0,.65);
       display:none; align-items:center; justify-content:center;
       flex-direction:column; z-index:9999; color:#fff;
-      font-size:16px; font-weight:600;
-      text-align: center;
+      font-size:16px; font-weight:600; text-align:center;
     }
     .spinner{
       border:6px solid #ffffff40;
@@ -78,112 +62,51 @@
     }
     @keyframes spin{ from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
 
-    .grid {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  gap: 30px;
-  justify-content: center;
-  align-items: center;
-  z-index: -1;
-  pointer-events: none;
-}
+    /* Fondo decorativo */
+    .grid { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; gap: 30px; justify-content: center; align-items: center; z-index: -1; pointer-events: none; }
+    .col { display: flex; flex-direction: column; gap: 20px; }
+    .rect { width: 80px; height: 120px; border: 2px solid #5F48D750; border-radius: 12px; }
+    .rect.filled { background: #412866; }
+    .down .rect { animation: moveDown 20s linear infinite; }
+    .up .rect { animation: moveUp 20s linear infinite; }
+    @keyframes moveDown { 0%{ transform: translateY(-150vh); opacity:0;} 10%{opacity:1;} 100%{transform:translateY(150vh); opacity:0;} }
+    @keyframes moveUp { 0%{ transform: translateY(150vh); opacity:0;} 10%{opacity:1;} 100%{transform:translateY(-150vh); opacity:0;} }
 
-.col {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.rect {
-  width: 80px;
-  height: 120px;
-  border: 2px solid #5F48D750;
-  border-radius: 12px;
-}
-
-.rect.filled {
-  background: #412866;
-}
-
-.down .rect {
-  animation: moveDown 20s linear infinite;
-}
-
-.up .rect {
-  animation: moveUp 20s linear infinite;
-}
-
-/* Arrancan desde arriba de la pantalla y van hacia abajo */
-@keyframes moveDown {
-  0%   { transform: translateY(-150vh); opacity: 0; }
-  10%  { opacity: 1; }
-  100% { transform: translateY(150vh); opacity: 0; }
-}
-
-/* Arrancan desde abajo y suben hacia arriba */
-@keyframes moveUp {
-  0%   { transform: translateY(150vh); opacity: 0; }
-  10%  { opacity: 1; }
-  100% { transform: translateY(-150vh); opacity: 0; }
-}
-/* Para ocultar/mostrar con el atributo hidden */
-[hidden] { display: none !important; }
-
+    /* Modal simple */
+    .modal-backdrop{ position:fixed; inset:0; background:rgba(0,0,0,.55); display:flex; align-items:center; justify-content:center; z-index:9998; }
+    .modal{ background:#1f1a33; color:#fff; border:1px solid #ffffff30; border-radius:16px; padding:16px; width:min(720px,92vw); box-shadow:0 10px 30px rgba(0,0,0,.35); }
+    .modal h3{ margin:0 0 12px 0; text-align:center; }
+    .modal .row{ display:flex; gap:10px; align-items:center; margin-bottom:10px; flex-wrap:wrap; }
+    .modal .row > *{ flex:1; }
+    .chips{ display:flex; gap:8px; flex-wrap:wrap; margin-top:8px }
+    .chip{ background:#ffffff20; border:1px solid #ffffff30; border-radius:999px; padding:6px 10px; font-size:12px }
+    .modal .actions{ margin-top:12px; }
+    [hidden]{ display:none !important; }
   </style>
 </head>
 <body>
 
+  <!-- Fondo -->
   <div class="grid">
-  <div class="col down">
-    <div class="rect filled"></div>
-    <div class="rect"></div>
-    <div class="rect"></div>
-    <div class="rect"></div>
-    <div class="rect"></div>
-    <div class="rect filled"></div>
-    <div class="rect"></div>
-    <div class="rect"></div>
-    <div class="rect"></div>
-    <div class="rect"></div>
-    <div class="rect"></div>
-    <div class="rect"></div>
+    <div class="col down">
+      <div class="rect filled"></div><div class="rect"></div><div class="rect"></div><div class="rect"></div>
+      <div class="rect"></div><div class="rect filled"></div><div class="rect"></div><div class="rect"></div>
+      <div class="rect"></div><div class="rect"></div><div class="rect"></div><div class="rect"></div>
+    </div>
+    <div class="col up">
+      <div class="rect"></div><div class="rect filled"></div><div class="rect"></div><div class="rect"></div>
+      <div class="rect"></div><div class="rect"></div><div class="rect"></div><div class="rect"></div>
+      <div class="rect"></div><div class="rect"></div><div class="rect"></div><div class="rect filled"></div>
+    </div>
+    <div class="col down">
+      <div class="rect"></div><div class="rect"></div><div class="rect filled"></div><div class="rect"></div>
+      <div class="rect"></div><div class="rect"></div><div class="rect"></div><div class="rect"></div>
+      <div class="rect filled"></div><div class="rect"></div><div class="rect"></div><div class="rect"></div>
+    </div>
   </div>
-  <div class="col up">
-    <div class="rect"></div>
-    <div class="rect filled"></div>
-    <div class="rect"></div>
-    <div class="rect"></div>
-    <div class="rect"></div>
-     <div class="rect"></div>
-    <div class="rect"></div>
-    <div class="rect"></div>
-    <div class="rect"></div>
-    <div class="rect"></div>
-    <div class="rect"></div>
-    <div class="rect filled"></div>
-  </div>
-  <div class="col down">
-   <div class="rect"></div>
-    <div class="rect"></div>
-    <div class="rect filled"></div>
-    <div class="rect"></div>
-    <div class="rect"></div>
-    <div class="rect"></div>
-    
-    <div class="rect"></div>
-    <div class="rect"></div>
-   <div class="rect filled"></div>
-    <div class="rect"></div>
-    <div class="rect"></div>
-    <div class="rect"></div>
-  </div>
-</div>
+
   <div class="topbar">
-  <button style="max-width: 120px; max-height: 60px;" onclick="window.location.href='/creditos'">← Volver</button>
+    <button style="max-width: 120px; max-height: 60px;" onclick="window.location.href='/creditos'">← Volver</button>
     <div class="note pill" style="color:#fff;">¡Hola! <b id="who">—</b></div>
   </div>
 
@@ -199,28 +122,51 @@
     <div id="loaderText">Cargando…</div>
   </div>
 
+  <!-- Modal Agregar Profesional + Servicios -->
+  <div id="modalAdd" class="modal-backdrop" hidden>
+    <div class="modal">
+      <h3>Nuevo profesional</h3>
+      <div class="row">
+        <input id="inpNombreProf" type="text" placeholder="Nombre del profesional" />
+      </div>
+      <div class="row">
+        <strong>Servicios</strong><span class="mini"> (nombre + duración)</span>
+      </div>
+      <div id="serviciosInputs"></div>
+      <div class="row">
+        <button id="btnAddServicio" class="btn-link" type="button">+ Agregar Servicio</button>
+      </div>
+      <div class="chips" id="serviciosResumen"></div>
+      <div class="actions">
+        <button id="btnGuardarProfesional">Guardar Profesional</button>
+        <button id="btnCancelarModal" class="btn-danger">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
   <script>
-    function showLoader(txt="Cargando…"){
-      document.getElementById("loaderText").textContent=txt;
-      document.getElementById("loaderOverlay").style.display="flex";
-    }
-    function hideLoader(){
-      document.getElementById("loaderOverlay").style.display="none";
-    }
-
-    // === CONFIG ===
-    const API_URL = "https://script.google.com/macros/s/AKfycbxBAuhqWsLFXN9HLfXvEhh8VEEcD9ppCEmQPkhhh0LxWwjdVnoMMMMPh1gndgwTD3ZnWQ/exec";
-
-    // === SESSION ===
+    // === CONFIG & SESSION ===
+    const API_URL = "https://script.google.com/macros/s/AKfycbxKhvDjAMU0HA6KOybXfIBWMMvin7Mad9HScnJniGK90g7jdV3z54mmaPlo0I1elk7pMA/exec";
     let userId = localStorage.getItem("userId");
     let username = localStorage.getItem("username");
-
     const q = new URLSearchParams(location.search);
     if (!userId && q.get("userId")) userId = q.get("userId");
     if (!username && q.get("username")) username = q.get("username");
 
     const dias = ["Lunes","Martes","Miércoles","Jueves","Viernes","Sábado","Domingo"];
-    document.getElementById("addProfBtn").onclick = agregarProfesional;
+
+    // === Loader ===
+    function showLoader(txt="Cargando…"){ document.getElementById("loaderText").textContent=txt; document.getElementById("loaderOverlay").style.display="flex"; }
+    function hideLoader(){ document.getElementById("loaderOverlay").style.display="none"; }
+
+    // === Utils horarios ===
+    function toggleSlot(e){ const el = e.target; if(!el.classList.contains("slot")) return; el.classList.toggle("selected"); }
+    function timeStrToParts(t){ const [h,m]=t.split(":").map(n=>parseInt(n,10)); return {h,m}; }
+    function nextTime(h,m,step){ m+=step; while(m>=60){m-=60; h++;} return {h,m}; }
+    function toHHMM(h,m){ return `${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}`; }
+
+    // === App init ===
+    document.getElementById("addProfBtn").onclick = openModalAgregarProfesional;
 
     async function init(){
       if(!userId || !username){
@@ -233,68 +179,88 @@
       await cargarProfesionales();
       hideLoader();
     }
+    document.addEventListener("DOMContentLoaded", init);
 
+    // === API: Listado ===
     async function cargarProfesionales(){
-      const res = await fetch(`${API_URL}?username=${encodeURIComponent(username)}`);
-      const data = await res.json();
-      if(data.status==="ok"){
-        renderProfesionales(data.profesionales||[]);
-      }else{
-        document.getElementById("profesionales").innerHTML = `<div class="note">No se pudieron cargar los profesionales.</div>`;
+      try{
+        const res = await fetch(`${API_URL}?username=${encodeURIComponent(username)}`);
+        const data = await res.json();
+        if(data.status==="ok"){
+          renderProfesionales(data.profesionales||[]);
+        }else{
+          document.getElementById("profesionales").innerHTML = `<div class="note" style="padding:12px;border-radius:10px;">No se pudieron cargar los profesionales.</div>`;
+        }
+      }catch(e){
+        document.getElementById("profesionales").innerHTML = `<div class="note" style="padding:12px;border-radius:10px;">Error de conexión.</div>`;
       }
     }
 
-    function renderProfesionales(list){
-      const cont = document.getElementById("profesionales");
-      if (!list || list.length === 0) {
+
+    
+// === Render ===
+function renderProfesionales(list){
+  const cont = document.getElementById("profesionales");
+  if (!list || list.length === 0) {
     cont.innerHTML = `
-      <div class="note" style="text-align:center; margin:20px 0; padding:15px; border-radius:12px; background:#f8f8f8;">
+      <div class="note" style="text-align:center; margin:20px 0; padding:15px; border-radius:12px; background:#ffffff10;">
         No hay profesionales creados.<br>
         <b>Creá uno</b> para acceder a la configuración.
       </div>
     `;
     return;
   }
+  cont.innerHTML = "";
 
-      
-      cont.innerHTML = "";
-list.forEach(p => {
-  const box = document.createElement("div");
-  box.className = "profesional";
-  box.innerHTML = `
-    <h3>${p.nombre}</h3>
-    <div class="actions">
-      <button class="btn-edit">Configurar Turnos</button>
-      <button class="btn-danger btn-clear">Limpiar Turnos</button>
-      <button class="btn-danger btn-delete">Eliminar Profesional</button>
-    </div>
-    <div class="editor" style="display:none"></div>
-  `;
+  list.forEach(p => {
+    const box = document.createElement("div");
+    box.className = "profesional";
 
-  const btnEdit = box.querySelector(".btn-edit");
-  const editor = box.querySelector(".editor");
-
-  btnEdit.onclick = () => {
-    if (btnEdit.textContent === "Configurar Turnos") {
-      // Abrimos editor usando tu función, solo abre y carga contenido
-      abrirEditor(editor, p);
-      editor.style.display = "block";   // nos aseguramos que se muestre
-      btnEdit.textContent = "Cerrar";
-    } else {
-      // Cerramos editor manualmente
-      editor.style.display = "none";
-      btnEdit.textContent = "Configurar Turnos";
+    // 🔹 Construimos los chips de servicios leyendo hasta 10 columnas
+    const serviciosArr = [];
+    for (let i = 1; i <= 10; i++) {
+      const nombreServ = p[`servicio${i}`];
+      const tiempoServ = p[`tiempo${i}`];
+      if (nombreServ && tiempoServ) {
+        serviciosArr.push(`<span class="chip">${escapeHtml(nombreServ)} • ${fmtDur(tiempoServ)}</span>`);
+      }
     }
-  };
+    const serviciosChips = serviciosArr.join("");
 
-  box.querySelector(".btn-clear").onclick = () => eliminarTurnos(p.profesionalId);
-  box.querySelector(".btn-delete").onclick = () => eliminarProfesional(p.profesionalId);
+    box.innerHTML = `
+      <h3>${escapeHtml(p.nombre||'—')}</h3>
+      ${serviciosChips ? `<div class="chips" aria-label="Servicios">${serviciosChips}</div>` : `<div class="mini" style="opacity:.9;text-align:center;margin-top:6px;">Sin servicios cargados</div>`}
+      <div class="actions">
+        <button class="btn-edit">Configurar Turnos</button>
+        <button class="btn-danger btn-clear">Limpiar Turnos</button>
+        <button class="btn-danger btn-delete">Eliminar Profesional</button>
+      </div>
+      <div class="editor" style="display:none"></div>
+    `;
 
-  cont.appendChild(box);
-});
+    const btnEdit = box.querySelector(".btn-edit");
+    const editor = box.querySelector(".editor");
 
-    }   
+    btnEdit.onclick = () => {
+      if (btnEdit.textContent === "Configurar Turnos") {
+        abrirEditor(editor, p);
+        editor.style.display = "block";
+        btnEdit.textContent = "Cerrar";
+      } else {
+        editor.style.display = "none";
+        btnEdit.textContent = "Configurar Turnos";
+      }
+    };
 
+    box.querySelector(".btn-clear").onclick = () => eliminarTurnos(p.profesionalId);
+    box.querySelector(".btn-delete").onclick = () => eliminarProfesional(p.profesionalId);
+
+    cont.appendChild(box);
+  });
+}
+
+    
+    // === Editor de horarios (slots) ===
     function abrirEditor(editorEl, prof){
       if(editorEl.dataset.open==="1"){ editorEl.style.display="none"; editorEl.dataset.open=""; return; }
       editorEl.dataset.open="1";
@@ -304,11 +270,11 @@ list.forEach(p => {
           <div class="left">
             <label>Intervalo
               <select id="intervalo_${prof.profesionalId}">
-                <option value="10">10 min</option>
                 <option value="15">15 min</option>
-                <option value="20">20 min</option>
-                <option value="30" selected>30 min</option>
-                <option value="60">60 min</option>
+                <option value="30">30 min</option>
+                <option value="45">45 min</option>
+                <option value="60" selected>60 min</option>
+                <option value="75">75 min</option>
               </select>
             </label>
             <button class="btn-link" id="genTodos_${prof.profesionalId}">⚡ Generar +</button>
@@ -321,6 +287,7 @@ list.forEach(p => {
         <div class="week" id="week_${prof.profesionalId}"></div>
         <div class="footerBar"><span class="status" id="status_${prof.profesionalId}"></span></div>
       `;
+
       const week = editorEl.querySelector(`#week_${prof.profesionalId}`);
       dias.forEach(d=>{
         const id = `${prof.profesionalId}_${d}`;
@@ -331,9 +298,9 @@ list.forEach(p => {
           <div class="range">
             Desde <input type="time" id="desde_${id}" value="09:00">
             hasta <input type="time" id="hasta_${id}" value="17:00">
-            <button class="btn-link" id="gen_${id}">Generar</button>
-            <button class="btn-link" id="sel_${id}">Selec +</button>
-            <button class="btn-link" id="clr_${id}">Selec -</button>
+            <button class="btn-link" id="gen_${id}" type="button">Generar</button>
+            <button class="btn-link" id="sel_${id}" type="button">Selec +</button>
+            <button class="btn-link" id="clr_${id}" type="button">Selec -</button>
           </div>
           <div class="slots" id="slots_${id}"></div>
         `;
@@ -343,29 +310,38 @@ list.forEach(p => {
         day.querySelector(`#clr_${id}`).onclick = ()=> seleccionarTodo(prof.profesionalId, d, false);
         day.querySelector(`#slots_${id}`).addEventListener("click", toggleSlot);
       });
+
       editorEl.querySelector(`#genTodos_${prof.profesionalId}`).onclick = ()=> generarTodos(prof.profesionalId);
       editorEl.querySelector(`#guardar_${prof.profesionalId}`).onclick = ()=> guardarTurnos(prof.profesionalId);
     }
 
-    function toggleSlot(e){ const el = e.target; if(!el.classList.contains("slot")) return; el.classList.toggle("selected"); }
-    function timeStrToParts(t){ const [h,m]=t.split(":").map(n=>parseInt(n,10)); return {h,m}; }
-    function nextTime(h,m,step){ m+=step; while(m>=60){m-=60; h++;} return {h,m}; }
-    function toHHMM(h,m){ return `${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}`; }
-    function generarSlots(profId, dia){ /* igual que antes */ 
+    function generarSlots(profId, dia){
       const interval = parseInt(document.getElementById(`intervalo_${profId}`).value,10);
       const desde = document.getElementById(`desde_${profId}_${dia}`).value;
       const hasta = document.getElementById(`hasta_${profId}_${dia}`).value;
       const target = document.getElementById(`slots_${profId}_${dia}`);
       target.innerHTML = "";
       let {h, m} = timeStrToParts(desde); const end = timeStrToParts(hasta);
-      while (h < end.h || (h===end.h && m < end.m)) {
+      // evita loops si rango inválido
+      if (isNaN(h) || isNaN(m) || isNaN(end.h) || isNaN(end.m)) return;
+      let guard = 0;
+      while ((h < end.h || (h===end.h && m < end.m)) && guard++ < 2000) {
         const hora = toHHMM(h,m);
-        const span = document.createElement("span"); span.className = "slot selected"; span.dataset.dia = dia; span.dataset.hora = hora; span.textContent = hora;
-        target.appendChild(span); ({h,m} = nextTime(h,m,interval));
+        const span = document.createElement("span");
+        span.className = "slot selected";
+        span.dataset.dia = dia;
+        span.dataset.hora = hora;
+        span.textContent = hora;
+        target.appendChild(span);
+        ({h,m} = nextTime(h,m,interval));
       }
     }
     function generarTodos(profId){ dias.forEach(d=>generarSlots(profId,d)); }
-    function seleccionarTodo(profId, dia, value){ const cont = document.getElementById(`slots_${profId}_${dia}`); cont.querySelectorAll(".slot").forEach(s=>{ s.classList.toggle("selected", !!value); }); }
+    function seleccionarTodo(profId, dia, value){
+      const cont = document.getElementById(`slots_${profId}_${dia}`);
+      if(!cont) return;
+      cont.querySelectorAll(".slot").forEach(s=> s.classList.toggle("selected", !!value));
+    }
 
     async function guardarTurnos(profId){
       showLoader("Guardando, puede demorar unos seg…");
@@ -375,7 +351,10 @@ list.forEach(p => {
       const all = [];
       dias.forEach(d=>{
         const cont = document.getElementById(`slots_${profId}_${d}`);
-        cont.querySelectorAll(".slot").forEach(s=>{ all.push({dia: s.dataset.dia, hora: s.dataset.hora, visible: s.classList.contains("selected") ? 1 : 0}); });
+        if(!cont) return;
+        cont.querySelectorAll(".slot").forEach(s=>{
+          all.push({dia: s.dataset.dia, hora: s.dataset.hora, visible: s.classList.contains("selected") ? 1 : 0});
+        });
       });
       try{
         const fd = new FormData();
@@ -386,69 +365,152 @@ list.forEach(p => {
         const data = await res.json();
         if(data.status==="ok"){ status.textContent = "Se guardaron los horarios exitosamente."; status.className = "status ok"; }
         else{ status.textContent = "❌ Error al guardar"; status.className = "status err"; }
-      }catch{ status.textContent = "❌ Error de conexión al guardar."; status.className = "status err"; }
-      finally{ btn.disabled = false; hideLoader(); }
+      }catch{
+        status.textContent = "❌ Error de conexión al guardar."; status.className = "status err";
+      }finally{
+        btn.disabled = false; hideLoader();
+      }
     }
 
-   
     async function eliminarTurnos(profId){
       if(!confirm("¿Seguro que quieres limpiar todos los turnos de este profesional?")) return;
-      showLoader("eliminando, puede demorar unos seg…");
-      const fd = new FormData(); fd.append("action","saveTurnosStandard"); fd.append("profesionalId", profId); fd.append("turnos", JSON.stringify([]));
+      showLoader("Eliminando turnos…");
+      const fd = new FormData();
+      fd.append("action","saveTurnosStandard");
+      fd.append("profesionalId", profId);
+      fd.append("turnos", JSON.stringify([]));
       try{
         const res = await fetch(API_URL, { method:"POST", body:fd });
         const data = await res.json();
-        if(data.status==="ok") alert("Turnos eliminados."); else alert("No se pudo limpiar.");
-      }catch{ alert("Error de conexión."); }
+        if(data.status==="ok") alert("Turnos eliminados.");
+        else alert("No se pudo limpiar.");
+      }catch{
+        alert("Error de conexión.");
+      }
       hideLoader();
     }
-async function agregarProfesional() {
-  if (!userId) { 
-    alert("Falta userId."); 
-    return; 
-  }
 
-  const nombre = prompt("Nombre del profesional:");
-  if (!nombre) return;
-
-  showLoader("Creando profesional…");
-
-  try {
-    const fd = new FormData();
-    fd.append("action", "addProfessional");
-    fd.append("userId", userId);
-    fd.append("nombre", nombre);
-
-    const res = await fetch(API_URL, { method: "POST", body: fd });
-    const data = await res.json();
-
-    if (data.status === "ok") {
-      hideLoader(); // 🔹 cierro loader apenas tengo respuesta OK
-      // 🔹 Actualizo la lista en paralelo (no bloquea la UI)
-      cargarProfesionales().catch(err => console.error("Error recargando:", err));
-    } else {
-      hideLoader();
-      alert("No se pudo agregar");
-    }
-  } catch (err) {
-    hideLoader();
-    alert("⚠️ Error de conexión con el servidor");
-    console.error(err);
-  }
-}
-    
     async function eliminarProfesional(profesionalId){
       if(!confirm("¿Seguro que querés eliminar este profesional?")) return;
-      showLoader("Eliminando, puede demorar unos seg…");
-      const fd = new FormData(); fd.append("action", "eliminarProfesional"); fd.append("profesionalId", profesionalId); fd.append("userId", userId);
-      try{ const res = await fetch(API_URL, { method:"POST", body: fd }); const data = await res.json();
-        if (data.status === "ok") { alert("Profesional eliminado con éxito"); await cargarProfesionales(); }
-        else { alert("No se pudo eliminar"); }
-      } catch{ alert("Error de conexión."); }
+      showLoader("Eliminando profesional…");
+      const fd = new FormData();
+      fd.append("action", "eliminarProfesional");
+      fd.append("profesionalId", profesionalId);
+      fd.append("userId", userId);
+      try{
+        const res = await fetch(API_URL, { method:"POST", body: fd });
+        const data = await res.json();
+        if (data.status === "ok") {
+          alert("Profesional eliminado con éxito");
+          await cargarProfesionales();
+        } else {
+          alert("No se pudo eliminar");
+        }
+      } catch{
+        alert("Error de conexión.");
+      }
       hideLoader();
     }
 
-    document.addEventListener("DOMContentLoaded", init);
+    // === Modal Agregar Profesional + Servicios ===
+    function openModalAgregarProfesional(){
+      if(!userId){ alert("Falta userId."); return; }
+      // reset
+      document.getElementById("inpNombreProf").value = "";
+      document.getElementById("serviciosInputs").innerHTML = "";
+      document.getElementById("serviciosResumen").innerHTML = "";
+      addServicioInput(); // arranco con 1 fila
+      document.getElementById("modalAdd").hidden = false;
+    }
+    document.getElementById("btnCancelarModal").onclick = ()=> (document.getElementById("modalAdd").hidden = true);
+    document.getElementById("btnAddServicio").onclick = addServicioInput;
+    document.getElementById("btnGuardarProfesional").onclick = guardarProfesionalModal;
+
+    function addServicioInput(){
+      const durs = [15,30,45,60,75,90,105,120];
+      const select = durs.map(m=>`<option value="${m}">${m<60? (m+' min') : (Math.floor(m/60)+'h'+(m%60?(' '+m%60+' min'):'') )}</option>`).join("");
+      const row = document.createElement("div");
+      row.className = "row";
+      row.innerHTML = `
+        <input type="text" class="svc-nombre" placeholder="Nombre del servicio">
+        <select class="svc-duracion">${select}</select>
+        <button type="button" class="btn-danger svc-remove">Quitar</button>
+      `;
+      row.querySelector(".svc-remove").onclick = ()=>{
+        row.remove();
+        refreshServiciosResumen();
+      };
+      row.querySelector(".svc-nombre").addEventListener("input", refreshServiciosResumen);
+      row.querySelector(".svc-duracion").addEventListener("change", refreshServiciosResumen);
+      document.getElementById("serviciosInputs").appendChild(row);
+      refreshServiciosResumen();
+    }
+
+    function refreshServiciosResumen(){
+      const wrap = document.getElementById("serviciosResumen");
+      wrap.innerHTML = "";
+      const servicios = collectServiciosFromUI();
+      servicios.forEach(s=>{
+        const chip = document.createElement("span");
+        chip.className = "chip";
+        chip.textContent = `${s.nombre} • ${fmtDur(s.tiempo)}`;
+        wrap.appendChild(chip);
+      });
+    }
+
+    function collectServiciosFromUI(){
+      const list = [];
+      document.querySelectorAll("#serviciosInputs .row").forEach(div=>{
+        const nombre = div.querySelector(".svc-nombre")?.value?.trim();
+        const tiempo = div.querySelector(".svc-duracion")?.value;
+        if(nombre) list.push({nombre, tiempo});
+      });
+      return list;
+    }
+
+    function fmtDur(mins){
+      const m = parseInt(mins,10);
+      if (isNaN(m)) return "—";
+      if (m < 60) return `${m} min`;
+      const h = Math.floor(m/60), r = m%60;
+      return r ? `${h}h ${r} min` : `${h}h`;
+    }
+
+    function escapeHtml(str){
+      return String(str||"").replace(/[&<>"']/g, s=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;' }[s]));
+    }
+
+    async function guardarProfesionalModal(){
+      const nombre = document.getElementById("inpNombreProf").value.trim();
+      if (!nombre) { alert("Ingresá el nombre del profesional"); return; }
+      const servicios = collectServiciosFromUI();
+
+      showLoader("Creando profesional…");
+      try {
+        const fd = new FormData();
+        fd.append("action", "addProfessional");
+        fd.append("userId", userId);
+        fd.append("nombre", nombre);
+        // incluir servicios si hay
+        fd.append("servicios", JSON.stringify(servicios));
+
+        const res = await fetch(API_URL, { method: "POST", body: fd });
+        const data = await res.json();
+
+        if (data.status === "ok") {
+          document.getElementById("modalAdd").hidden = true;
+          hideLoader();
+          cargarProfesionales().catch(err => console.error("Error recargando:", err));
+        } else {
+          hideLoader();
+          alert("No se pudo agregar");
+        }
+      } catch (err) {
+        hideLoader();
+        alert("⚠️ Error de conexión con el servidor");
+        console.error(err);
+      }
+    }
   </script>
 </body>
 </html>
