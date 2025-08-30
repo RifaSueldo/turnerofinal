@@ -574,6 +574,7 @@ function renderTickets(fechaStr){
     div.innerHTML=`
       <h3>TurnoX</h3>
       <div class="hora">${t.hora}</div>
+       <div class="Servicio">${t.servicio}</div>
       <p><strong>Turno con:</strong> ${t.profesional || "Ej: Barbería X"}</p>
       <p><strong>Nombre:</strong> ${t.nombre} ${t.apellido}</p>
       <p><strong>Dirección:</strong> ${t.direccion || ""}</p>
