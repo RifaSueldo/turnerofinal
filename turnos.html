@@ -546,6 +546,7 @@ function clickDia(td){
   renderTickets(td.dataset.fecha);
 }
 
+
 function renderTickets(fechaStr){
   const ticketsDiv = document.getElementById("ticketsContainer");
   const turnos = turnosPorFecha[fechaStr] || [];
