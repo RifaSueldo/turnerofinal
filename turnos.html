@@ -583,10 +583,12 @@ function renderTickets(fechaStr){
       <p><strong>DNI:</strong> ${t.dni}</p>
       <p><strong>Comentario:</strong> ${t.comentario || ""}</p>
       
-      ${whatsappLink ? `<button onclick="window.open('${whatsappLink}','_blank')">Recordatorio Manual</button>` : `<button disabled>Sin WhatsApp</button>`}
-    `;
-    grid.appendChild(div);
-  });
+      ${whatsappLink 
+      ? `<a href="${whatsappLink}" target="_blank"><button>Recordatorio Manual</button></a>` 
+      : `<button disabled>Sin WhatsApp</button>`}
+  `;
+  grid.appendChild(div);
+});
 
   ticketsDiv.appendChild(grid);
 }
