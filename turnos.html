@@ -546,38 +546,35 @@ function clickDia(td){
   renderTickets(td.dataset.fecha);
 }
 
-function renderTickets(fechaStr) {
+function renderTickets(fechaStr){
   const ticketsDiv = document.getElementById("ticketsContainer");
   const turnos = turnosPorFecha[fechaStr] || [];
   const fechaBonita = fechaStr.split("-").reverse().join("/");
 
-  ticketsDiv.innerHTML = `<h2 style="text-align:center;color:#fff;">Turnos para el día ${fechaBonita}</h2>`;
+  ticketsDiv.innerHTML=`<h2 style="text-align:center;color:#fff;">Turnos para el día ${fechaBonita}</h2>`;
 
-  if (turnos.length === 0) {
+  if(turnos.length===0){
     ticketsDiv.innerHTML += `<p style="text-align:center;">En esta fecha no hay turnos.</p>`;
     return;
   }
 
   const grid = document.createElement("div");
-  grid.className = "ticketsGrid";
+  grid.className="ticketsGrid";
 
-  turnos.forEach(t => {
+  turnos.forEach(t=>{
     const div = document.createElement("div");
-    div.className = "ticket";
+    div.className="ticket";
 
     // Preparar mensaje de recordatorio para WhatsApp
-    const mensaje = encodeURIComponent(
-      `Recordatorio: Te esperamos ${fechaBonita} a las ${t.hora} en ${username}. (${t.profesional})`
-    );
-    const whatsappLink = t.whatsapp
-      ? `https://wa.me/${t.whatsapp}?text=${mensaje}`
-      : null;
+    const mensaje = encodeURIComponent(`Recordatorio: Te esperamos ${fechaBonita} a las ${t.hora} en ${username}. (${t.profesional})`);
+    const whatsappLink = t.whatsapp ? `https://wa.me/${t.whatsapp}?text=${mensaje}` : null;
 
-    // Construcción segura del HTML
-    let contenido = `
+
+    div.innerHTML=`
       <h3>TurnoX</h3>
       <div class="hora">${t.hora}</div>
-      <p><strong>Servicio:</strong> ${t.servicios || ""}</p>
+    
+       <p><strong>Servicio:</strong> ${t.servicios || ""}</p>
       <p><strong>Turno con:</strong> ${t.profesional || "Ej: Barbería X"}</p>
       <p><strong>Nombre:</strong> ${t.nombre} ${t.apellido}</p>
       <p><strong>Dirección:</strong> ${t.direccion || ""}</p>
@@ -585,16 +582,11 @@ function renderTickets(fechaStr) {
       <p><strong>WhatsApp:</strong> ${t.whatsapp || ""}</p>
       <p><strong>DNI:</strong> ${t.dni}</p>
       <p><strong>Comentario:</strong> ${t.comentario || ""}</p>
+      
+      ${whatsappLink 
+  ? `<a href="${whatsappLink}" target="_blank"><button>Recordatorio Manual</button></a>` 
+  : `<button disabled>Sin WhatsApp</button>`}
     `;
-
-    // Agregar botón/link según corresponda
-    if (whatsappLink) {
-      contenido += `<a href="${whatsappLink}" target="_blank"><button>Recordatorio Manual</button></a>`;
-    } else {
-      contenido += `<button disabled>Sin WhatsApp</button>`;
-    }
-
-    div.innerHTML = contenido;
     grid.appendChild(div);
   });
 
