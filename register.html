@@ -161,16 +161,25 @@
 
     <!-- Form -->
     <form id="registerForm"> 
-      <h2>Crear tu cuenta:</h2> 
-      <input type="email" id="email" placeholder="Email" required> 
-      <input type="password" id="password" placeholder="Contraseña" required> 
-      <input type="text" id="username" placeholder="nombreDeTuNegocio" required> 
-      <span class="web">Tu "nombre de negocio" será "tu link" ej: www.turnox.pro/peluquitos o www.turnox.pro/hair-studio.</span>
-      <button type="submit">Crear cuenta</button> 
-      <button type="button" onclick="window.location.href='/login'">Ya tengo una cuenta</button>
-      
-      
-    </form>
+  <h2>Crear tu cuenta:</h2> 
+
+  <!-- Campo principal para login -->
+  <input type="email" id="email" name="email" autocomplete="username" placeholder="Email" required> 
+
+  <!-- Contraseña -->
+  <input type="password" id="password" name="password" autocomplete="new-password" placeholder="Contraseña" required> 
+
+  <!-- Nombre de negocio, no se guarda en Chrome -->
+  <input type="text" id="username" name="username" autocomplete="off" placeholder="nombreDeTuNegocio" required> 
+
+  <span class="web">
+    Tu "nombre de negocio" será tu link, ej: www.turnox.pro/peluquitos
+  </span>
+
+  <button type="submit">Crear cuenta</button> 
+  <button type="button" onclick="window.location.href='/login'">Ya tengo una cuenta</button>
+</form>
+
     <div id="msg"></div> 
   <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbwhao-x-CYqmaN7QVrECL-KPpbGam7PyPzShew3rLtaK6XVPP_ZOiJN7fn2h7sxJRFjcg/exec";
