@@ -159,19 +159,19 @@
 
 <div class="container">
   <div class="card">
-    <h2>Publicá tu logo!</h2>
+    <h2>Edita la portada!</h2>
 
     <!-- Subida a ImgBB -->
    <label for="logoFile" class="custom-file-btn">Seleccionar Logo</label>
 <input type="file" id="logoFile" accept="image/*">
     <button id="uploadBtn" style="margin-bottom: 10px">Subir</button>
-<p style="font-size: 10px">Tip: Primero seleciona y subí tu logo, se genera un link, luego presionas "Guardar Logo""</p>
+<p style="font-size: 10px">Tip: Primero seleciona y subí tu foto, se genera un link, luego presionas "Guardar""</p>
     
     <!-- Preview y link -->
-    <input type="url" id="logoUrl" placeholder="Link del logo" required>
+    <input type="url" id="logoUrl" placeholder="Link del imagen" required>
     <div class="preview" id="preview"></div>
 
-    <button id="saveBtn" disabled>Guardar Logo</button>
+    <button id="saveBtn" disabled>Guardar</button>
     <p id="status"></p>
   </div>
 
@@ -202,7 +202,7 @@ uploadBtn.addEventListener("click", async () => {
   const file = logoFile.files[0];
   if (!file) return alert("Seleccioná un archivo primero");
 
-  status.innerText = "Subiendo logo a ImgBB...";
+  status.innerText = "Subiendo portada...";
 
   const reader = new FileReader();
   reader.onloadend = async () => {
@@ -220,7 +220,7 @@ uploadBtn.addEventListener("click", async () => {
       console.log(data);
       if (data.success) {
         const url = data.data.url;
-        status.innerText = "Logo subido! URL copiada al campo de texto";
+        status.innerText = "Portada subida! URL copiada al campo de texto";
         logoInput.value = url; // poner URL en el input
         preview.innerHTML = `<img src="${url}" alt="Logo">`;
         saveBtn.disabled = false; // habilitar botón guardar
@@ -240,7 +240,7 @@ saveBtn.addEventListener("click", async () => {
   const logoUrl = logoInput.value.trim();
   if (!logoUrl || !userId) return;
 
-  status.innerText = "Guardando logo...";
+  status.innerText = "Guardando Portada...";
 
   try {
     const res = await fetch("https://script.google.com/macros/s/AKfycbxBAuhqWsLFXN9HLfXvEhh8VEEcD9ppCEmQPkhhh0LxWwjdVnoMMMMPh1gndgwTD3ZnWQ/exec", {
