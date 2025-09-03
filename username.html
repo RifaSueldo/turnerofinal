@@ -38,9 +38,61 @@
   font-style: normal;
   margin: 0;
   padding: 0;
-  background-color: #000;
-     color: #fff;
+  background-color: #fff;
+     color: #000;
+     display: flex;
+    flex-direction: column;
+    min-height: 100vh;
     }
+
+    
+  header {
+    position: relative;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+   
+  }
+
+  #floatingLogo {
+    position: static;
+    transform: none;
+    margin: 0 auto;
+    width: 100%;
+     max-width: 600px;
+    justify-content: center;
+    align-items: center;
+   
+  }
+
+  #floatingLogo img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+  }
+
+  header .login-btn {
+  position: absolute;
+  top: 0px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.6);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 0px 0px 12px 12px;
+  text-decoration: none;     /* saca subrayado */
+  transition: background 0.3s ease, opacity 0.3s ease;
+  display: inline-block;
+}
+
+/* hover: pierde transparencia */
+header .login-btn:hover,
+header .login-btn:active {
+  background: rgba(0,0,0,1);
+}
+
+
   h1 {
     text-align: center;
     margin-bottom: 20px;
@@ -51,13 +103,13 @@
 
   /* Calendario */
   #calendario {
-   margin: 100px auto 10px auto; /* arriba - lados - abajo - lados */
+   margin: 20px auto 10px auto; /* arriba - lados - abajo - lados */
   max-width: 600px;             /* ancho máximo */
   width: 100%;  
-    background: #ffffff15;
+    background: #000000;
     background-blend-mode: overlay;
   color: #fff; 
-    border: 1px solid #ffffff30;
+    border: 1px solid #00000030;
     border-radius: 16px;
     overflow: hidden;
     padding: 15px;
@@ -74,8 +126,8 @@
 }
 
 #calendario td.seleccionado {
-  background-color: #000;
-  color: #fff;
+  background-color: #fff;
+  color: #000;
   border-radius: 10%;
 }
 
@@ -89,37 +141,84 @@
  
 }
   /* Turnos */
-  .turnos {
-    margin: 15px auto;
-    max-width: 600px;
-    text-align: center;
-    padding: 15px;
-    background: #ffffff15;
-    background-blend-mode: overlay;
-    color: #fff; 
-    border: 2px solid #ffffff30;
-    border-radius: 16px;
-    backdrop-filter: blur(3px);
-     
-  }
-  .turnos h3 { margin-bottom: 10px; }
-  .hora { display: inline-block; margin: 5px; padding: 8px 12px; border-radius: 10px; font-weight: 600; transition: all 0.2s; }
-  .hora.disponible { background: #ffffff99; color: #000000; border-radius: 10px; }
-  .hora.disponible:hover { background: #000000; color: #fff;  cursor: pointer; transform: translateY(-2px); }
-  .hora.bloqueado { background: #ccc; color: #F7F7F7; cursor: not-allowed; text-decoration: line-through; opacity: 0.6; border-radius: 10px; }
-.hora.selected {
-  background-color: #000000; /* fondo del seleccionado */
-  color: #fff;               /* texto */
+.turnos {
+  margin: 15px auto;
+  max-width: 600px;
+  padding: 15px;
+  background: #000000;
+  background-blend-mode: overlay;
+  color: #fff; 
+  border: 2px solid #00000030;
+  border-radius: 16px;
+  backdrop-filter: blur(3px);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.turnos h3 {
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.select-servicio {
+  margin-bottom: 15px;
+}
+
+.hora-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 columnas para turnos */
+  gap: 10px;
+  width: 100%;
+}
+
+.hora {
+  display: block;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-weight: 600;
+  text-align: center;
+  min-width: 80px;
+  transition: all 0.2s;
+}
+
+.hora.disponible {
+  background: #ffffff99;
+  color: #000000;
+}
+
+.hora.disponible:hover {
+  background: #000000;
+  color: #fff;
+  cursor: pointer;
   transform: translateY(-2px);
 }
+
+.hora.bloqueado {
+  background: #ccc;
+  color: #F7F7F7;
+  cursor: not-allowed;
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+.hora.selected {
+  background-color: #000000;
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+
  /* Formulario de reserva */
 #reservaFormContainer {
   margin: 20px auto;
   max-width: 600px;
-  background: #ffffff15;
+  background: #000000;
     background-blend-mode: overlay;
   color: #fff; 
-    border: 2px solid #ffffff30;
+    border: 2px solid #00000030;
     border-radius: 16px;
   padding: 20px;
   text-align: center; /* todo centrado */
@@ -139,16 +238,17 @@
   padding: 10px;
   margin: 8px 0;
   border-radius: 16px; 
-  border: 1px solid #ffffff40;
+  border: 1px solid #fff;
   font-family: 'Montserrat', sans-serif;
   text-align: center;
   box-sizing: border-box;
-   background-color: #ffffff25;
+   background-color: #000000;
+  color: #fff;
 }
 
 #reservaForm button {
-  background-color: #000000;
-  color: #fff;
+  background-color: #fff;
+  color: #000;
   border: none;
   border-radius: 16px; 
   font-weight: 600;
@@ -157,7 +257,7 @@
 }
 
 #reservaForm button:hover {
-  background-color: #00000099;
+  background-color: #ccc;
   transform: translateY(-2px);
 }
 
@@ -199,11 +299,11 @@
   font-style: normal;
   margin: 20px auto;
   max-width: 500px;
- background: #ffffff25;
+ background: #000000;
     background-blend-mode: overlay;
   color: #fff; 
-    border: 2px solid #ffffff40;
-    border-radius: 16px;
+    border: 2px solid #00000030;
+    border-radius: 0px;
   padding: 20px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.15);
   text-align: left;
@@ -234,82 +334,18 @@
   padding: 14px 16px;
   border: none;
   border-radius: 10px;
-  background: #000000;
-  color: #fff;
+  background: #fff;
+  color: #000;
   cursor: pointer;
   display: block;
   margin-left: auto;
   margin-right: auto;
 }
 .ticket button:hover {
-  background: #00000099;
+  background: #ccc;
 }
 
-#floatingLogo {
-  height: 100%;
-  display: flex;
-  align-items: center;
-  margin-left: 5px;
-  max-width: 60%;            /* nunca supere el 60% del ancho del header */
-  transition: transform 0.9s ease;
-  transform: translateX(-150px); /* empieza fuera de pantalla */
-}
 
-#floatingLogo img {
-  max-height: 60px;
-  max-width: 100%;
-  object-fit: contain;
-  display: block;
-}
-header {
-      position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 70px;              
-  border-bottom: 1px solid #ddd;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 10px;
-  box-sizing: border-box;
-  z-index: 1000;
-       background: 
-        linear-gradient(
-            135deg,
-            #9f9da1 0%, 
-            #fff 25%, 
-            #dedede 50%, 
-            #fff 75%, 
-            #9f9da1 100%
-        ),
-        repeating-linear-gradient(
-            0deg,
-            rgba(255,255,255,0.05) 0px,
-            rgba(255,255,255,0.05) 2px,
-            transparent 2px,
-            transparent 4px
-        );
-   
-    background-blend-mode: overlay;
-      
-    }
-     /* Botón Login */
-    .login-btn {
-      padding: 8px 16px;
-      background-color: #575757;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      font-size: 14px;
-      cursor: pointer;
-      text-decoration: none;
-      transition: background 0.3s ease;
-    }
-
-    .login-btn:hover {
-      background-color: #533482;
-    }
         .grid {
   position: fixed;
   top: 0;
@@ -333,12 +369,12 @@ header {
 .rect {
   width: 80px;
   height: 120px;
-  border: 2px solid #B0B0B050;
+  border: 2px solid #E5E5E850;
   border-radius: 12px;
 }
 
 .rect.filled {
-  background: #3A3A3A;
+  background: #E5E5E8;
 }
 
 .down .rect {
@@ -479,17 +515,20 @@ textarea::placeholder {
   <img id="userLogo"></div>
 </div>
    <!-- Botón Login -->
-    <a href="login.html" class="login-btn">Acceso</a>
+    <a href="login.html" class="login-btn">Acceso Profesionales</a>
  </header>
   
-
+<!-- Bienvenida -->
+<div class="welcome" style="text-align: center;">
+  <h2>Bienvenido a <span id="businessName" style="text-transform: uppercase; color: #000;"></span></h2>
+</div>
   
 
   <div id="calendario"></div>
 <div style="display:flex; gap:20px; align-items:center; justify-content:center;">
   <!-- Botón Mes anterior -->
-  <button id="prevMonth" style="display:flex; align-items:center; gap:6px; padding:0; background:none; border:none; color:#F4EDFF; cursor:pointer; font-size:16px;">
-    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="18" viewBox="0 0 60 24" fill="none" stroke="#F4EDFF" stroke-width="2" stroke-linecap="butt" stroke-linejoin="miter">
+  <button id="prevMonth" style="display:flex; align-items:center; gap:6px; padding:0; background:none; border:none; color:#000; cursor:pointer; font-size:16px;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="18" viewBox="0 0 60 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="miter">
       <line x1="58" y1="12" x2="8" y2="12"></line>
       <polyline points="16,4 2,12 16,20"></polyline>
     </svg>
@@ -497,9 +536,9 @@ textarea::placeholder {
   </button>
 
   <!-- Botón Mes siguiente -->
-  <button id="nextMonth" style="display:flex; align-items:center; gap:6px; padding:0; background:none; border:none; color:#F4EDFF; cursor:pointer; font-size:16px;">
+  <button id="nextMonth" style="display:flex; align-items:center; gap:6px; padding:0; background:none; border:none; color:#000; cursor:pointer; font-size:16px;">
     Mes siguiente
-    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="18" viewBox="0 0 60 24" fill="none" stroke="#F4EDFF" stroke-width="2" stroke-linecap="butt" stroke-linejoin="miter">
+    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="18" viewBox="0 0 60 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="miter">
       <line x1="2" y1="12" x2="52" y2="12"></line>
       <polyline points="44,4 58,12 44,20"></polyline>
     </svg>
@@ -534,7 +573,10 @@ if (!username) {
   if (lastSegment && lastSegment !== "username.html") username = lastSegment;
 }
 if (!username) alert("Falta username en la URL");
-
+// Mostrar el username en la bienvenida
+if (username) {
+  document.getElementById("businessName").textContent = username;
+}
 // ------------------ VARIABLES GLOBALES ------------------
 let selectedDate;      // Fecha seleccionada
 let turnosData = {};   // Turnos cargados
@@ -675,16 +717,14 @@ async function cargarTurnos(fechaStr) {
     } else {
       Object.keys(turnosData).forEach(profId => {
         const profObj = turnosData[profId];
-
-        // guardamos el intervalo de este profesional
         const profConfig = profesionales.find(p => p.profesionalId === profId);
         if (profConfig) {
-          profObj.intervalo = parseInt(profConfig.intervalo) || 30; // 👈 ahora cada prof tiene su intervalo
+          profObj.intervalo = parseInt(profConfig.intervalo) || 30;
         }
 
         html += `<div class="turnos"><h3>${profObj.nombre}</h3>`;
 
-        // --- servicios ---
+        // --- Servicios ---
         let servicios = [];
         if (profConfig) {
           for (let i = 1; i <= 10; i++) {
@@ -695,7 +735,6 @@ async function cargarTurnos(fechaStr) {
             }
           }
         }
-        console.log("Servicios para", profObj.nombre, servicios);
 
         if (servicios.length) {
           html += `<label>Servicio: <select data-profid="${profId}" class="select-servicio">
@@ -706,9 +745,11 @@ async function cargarTurnos(fechaStr) {
           html += `</select></label>`;
         }
 
+        // --- Turnos ---
         if (!profObj.turnos || profObj.turnos.length === 0) {
           html += "<p>No hay turnos disponibles</p>";
         } else {
+          html += `<div class="hora-container">`; // contenedor de grilla 2 columnas
           profObj.turnos.forEach(t => {
             const clase = t.estado === "bloqueado" ? "bloqueado" : "disponible";
             const horaFormateada = t.hora.padStart(5, "0");
@@ -719,13 +760,14 @@ async function cargarTurnos(fechaStr) {
                         ${horaFormateada}
                      </span>`;
           });
+          html += `</div>`; // cierre del contenedor de grilla
         }
-        html += `</div>`;
+
+        html += `</div>`; // cierre del contenedor .turnos
       });
     }
 
     turnosDiv.innerHTML = html;
-
     // listeners turnos
     document.querySelectorAll(".hora.disponible").forEach(span => {
       span.addEventListener("click", () => {
@@ -1008,7 +1050,7 @@ const todayStr = selectedDate.toLocaleDateString("fr-CA"); // yyyy-mm-dd sin UTC
 <script>
  setTimeout(() => {
   document.getElementById('floatingLogo').style.transform = 'translateX(0)';
-}, 4000);
+}, 1000);
 </script>
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
