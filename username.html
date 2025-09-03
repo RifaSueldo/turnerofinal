@@ -101,41 +101,92 @@ header .login-btn:active {
 
   
 
-  /* Calendario */
-  #calendario {
-   margin: 20px auto 10px auto; /* arriba - lados - abajo - lados */
-  max-width: 600px;             /* ancho máximo */
+
+/* Calendario */
+#calendario {
+  margin: 20px auto 10px auto;
+  max-width: 600px;
   width: 100%;  
-    background: #000000;
-    background-blend-mode: overlay;
+  background: #000000;
+  background-blend-mode: overlay;
   color: #fff; 
-    border: 1px solid #00000030;
-    border-radius: 16px;
-    overflow: hidden;
-    padding: 15px;
-    backdrop-filter: blur(3px);
-  }
-  #calendario h2 { text-align: center; margin-bottom: 10px; text-transform: capitalize; }
-  #calendario table { width: 100%; border-collapse: collapse; }
-  #calendario th, #calendario td { width: 14.28%; text-align: center; padding: 10px 0; }
-  #calendario td:hover { border-color: #ffffff99; cursor: pointer; border-radius: 10%; }
-  #calendario td[style*="not-allowed"] { cursor: not-allowed; color: #999; }
-#calendario td.hoy {
-  border: 2px solid #ffffff99;
-  border-radius: 10%;
+  border: 1px solid #00000030;
+  border-radius: 16px;
+  overflow: hidden;
+  padding: 15px;
+  backdrop-filter: blur(3px);
 }
 
-#calendario td.seleccionado {
+#calendario h2 {
+  text-align: center;
+  margin-bottom: 10px;
+  text-transform: capitalize;
+}
+
+/* 🔹 Contenedor de días scrollable */
+#dias {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 10px 0;
+  scroll-snap-type: x mandatory;
+}
+
+#dias .dia {
+  min-width: 40px;
+  text-align: center;
+  flex-shrink: 0;
+  scroll-snap-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+#dias .dia-numero {
+  height: 40px;
+  line-height: 40px;
+  border-radius: 10%;
+  background: #222;
+  margin-bottom: 4px;
+}
+
+#dias .dia-letra {
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+#dias .dia-numero:hover {
+  background: #ffffff33;
+}
+
+#dias .hoy .dia-numero {
+  border: 2px solid #ffffff99;
+}
+
+#dias .seleccionado .dia-numero {
   background-color: #fff;
   color: #000;
-  border-radius: 10%;
 }
 
-#calendario td.bloqueado {
+#dias .bloqueado {
   cursor: not-allowed;
   color: #999;
   pointer-events: none;
 }
+
+#dias::-webkit-scrollbar {
+  height: 4px;
+}
+
+#dias::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#dias::-webkit-scrollbar-thumb {
+  background: linear-gradient(90deg, #666, #aaa);
+  border-radius: 10px;
+}
+
+     
 #turnos {
   text-align: center;
  
@@ -525,7 +576,8 @@ textarea::placeholder {
 </div>
   
 
-  <div id="calendario"></div>
+ <div id="calendario"></div>
+
 <div style="display:flex; gap:20px; align-items:center; justify-content:center;">
   <!-- Botón Mes anterior -->
   <button id="prevMonth" style="display:flex; align-items:center; gap:6px; padding:0; background:none; border:none; color:#000; cursor:pointer; font-size:16px;">
@@ -545,7 +597,6 @@ textarea::placeholder {
     </svg>
   </button>
 </div>
-
 
   <div id="turnos">
 
@@ -626,63 +677,82 @@ function renderCalendario(year, month) {
   const firstDay = new Date(year, month, 1);
   const lastDay = new Date(year, month + 1, 0);
   const calendarDiv = document.getElementById("calendario");
+
+  // título del mes
   calendarDiv.innerHTML = `<h2>${firstDay.toLocaleString("es-ES",{month:"long", year:"numeric"})}</h2>`;
 
-  let table = "<table><tr>";
-  const diasSemana = ["Dom","Lun","Mar","Mié","Jue","Vie","Sáb"];
-  diasSemana.forEach(d => table += `<th>${d}</th>`);
-  table += "</tr><tr>";
+  // contenedor de días en fila horizontal
+  const diasContainer = document.createElement("div");
+  diasContainer.id = "dias";
 
-  for (let i = 0; i < firstDay.getDay(); i++) table += "<td></td>";
+  const letrasDias = ["D","L","M","M","J","V","S"]; // primeras letras
+
+  let diaCentrar = null; // guardamos qué día centrar
 
   for (let d = 1; d <= lastDay.getDate(); d++) {
     const fecha = new Date(year, month, d);
     const fechaStr = fecha.toISOString().split("T")[0];
+    const letra = letrasDias[fecha.getDay()];
 
-    let clases = "";
+    const dia = document.createElement("div");
+    dia.classList.add("dia");
 
-    // marcar día bloqueado (no se puede clickear)
+    const diaNumero = document.createElement("div");
+    diaNumero.classList.add("dia-numero");
+    diaNumero.textContent = d;
+
+    const diaLetra = document.createElement("div");
+    diaLetra.classList.add("dia-letra");
+    diaLetra.textContent = letra;
+
+    dia.appendChild(diaNumero);
+    dia.appendChild(diaLetra);
+
     if (fecha < new Date(today.getFullYear(), today.getMonth(), today.getDate())) {
-      clases = "bloqueado";
-      table += `<td class="${clases}">${d}</td>`;
+      dia.classList.add("bloqueado");
     } else {
-      // marcar día de hoy
       if (
         fecha.getFullYear() === today.getFullYear() &&
         fecha.getMonth() === today.getMonth() &&
         fecha.getDate() === today.getDate()
       ) {
-        clases += (clases ? " " : "") + "hoy";
+        dia.classList.add("hoy");
+        diaCentrar = dia; // en mes actual → hoy
       }
-
-      table += `<td class="${clases}" onclick="seleccionarDia(this, '${fechaStr}')">${d}</td>`;
+      dia.onclick = () => seleccionarDia(dia, fechaStr);
     }
 
-    if (fecha.getDay() === 6 && d !== lastDay.getDate()) table += "</tr><tr>";
+    // si no es el mes actual y aún no tenemos referencia, centramos el 1
+    if (!diaCentrar && d === 1) {
+      diaCentrar = dia;
+    }
+
+    diasContainer.appendChild(dia);
   }
 
-  table += "</tr></table>";
-  calendarDiv.innerHTML += table;
+  calendarDiv.appendChild(diasContainer);
 
   // botones mes anterior/siguiente
-  document.getElementById("prevMonth").onclick = () => {
-    renderCalendario(year, month - 1);
-  };
-  document.getElementById("nextMonth").onclick = () => {
-    renderCalendario(year, month + 1);
-  };
+  document.getElementById("prevMonth").onclick = () => renderCalendario(year, month - 1);
+  document.getElementById("nextMonth").onclick = () => renderCalendario(year, month + 1);
+
+  // 🔹 Centrar el día elegido después de renderizar
+  if (diaCentrar) {
+    setTimeout(() => {
+      diaCentrar.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+    }, 100);
+  }
 }
 
 // ------------------ SELECCIONAR DÍA ------------------
-function seleccionarDia(td, fechaStr) {
+function seleccionarDia(diaDiv, fechaStr) {
   // quitar selección anterior
-  document.querySelectorAll("#calendario td.seleccionado").forEach(el => el.classList.remove("seleccionado"));
+  document.querySelectorAll("#dias .dia.seleccionado").forEach(el => el.classList.remove("seleccionado"));
   // marcar día seleccionado
-  td.classList.add("seleccionado");
+  diaDiv.classList.add("seleccionado");
   // cargar turnos
   cargarTurnos(fechaStr);
 }
-
 // ------------------ CARGAR TURNOS ------------------
 async function cargarTurnos(fechaStr) {
   selectedDate = new Date(fechaStr + "T00:00:00");
