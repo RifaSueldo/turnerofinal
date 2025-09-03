@@ -1043,7 +1043,7 @@ document.addEventListener("DOMContentLoaded", () => {
 const todayStr = selectedDate.toLocaleDateString("fr-CA"); // yyyy-mm-dd sin UTC
   cargarTurnos(todayStr).then(() => {
     const turnosDiv = document.getElementById("turnos");
-    if (turnosDiv) turnosDiv.scrollIntoView({ behavior: "smooth" });
+    // if (turnosDiv) turnosDiv.scrollIntoView({ behavior: "smooth" });
   });
 });
 </script>
