@@ -2,11 +2,12 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>TurnoX - Sistema PRE-PAGO de Turnos On Line</title>
+  <title>TurnoX - Pro</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
   <!-- Fuentes -->
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+ 
  
 
   <!-- Iconos -->
@@ -14,8 +15,8 @@
   <link rel="icon" type="image/x-icon" href="favicon.ico">
 
   <!-- Open Graph para WhatsApp/Facebook -->
-  <meta property="og:title" content=">TurnoX - Sistema PRE-PAGO de Turnos On Line" />
-  <meta property="og:description" content="Turnero Pro." />
+  <meta property="og:title" content=">TurnoX - Pro" />
+  <meta property="og:description" content="Beauticians & Hairdressers" />
   <meta property="og:image" content="https://i.ibb.co/p6Ycq6XC/Turnox-logo.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
@@ -24,8 +25,8 @@
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="TurnoX - Sistema PRE-PAGO de Turnos On Line" />
-  <meta name="twitter:description" content="Turnero Pro." />
+  <meta name="twitter:title" content="TurnoX - Pro" />
+  <meta name="twitter:description" content="Beauticians & Hairdressers" />
   <meta name="twitter:image" content="https://i.ibb.co/p6Ycq6XC/Turnox-logo.png" />
    <style>
     html {
@@ -43,6 +44,8 @@
      display: flex;
     flex-direction: column;
     min-height: 100vh;
+     height: 100%;
+ 
     }
 
     
@@ -508,6 +511,8 @@ textarea::placeholder {
   background-color: #5A5A5A !important; /* gris medio */
   color: #fff !important;
 }
+
+    
 </style>
 
 </head>
@@ -567,6 +572,10 @@ textarea::placeholder {
 </div>
    <!-- Botón Login -->
     <a href="login.html" class="login-btn">Acceso</a>
+
+   
+ 
+
  </header>
   
 <!-- Bienvenida -->
@@ -611,6 +620,29 @@ textarea::placeholder {
 
 <!-- Nuevo: ticket fijo -->
 <div id="ticketContainer"></div>
+
+<div id="compartirCard" style="display:flex; justify-content:center; margin:40px 0;">
+  <div id="cardParaDescarga" style="
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        justify-content:center;
+        max-width:600px;
+        width:90%;
+        padding:30px 20px;
+        border-radius:12px;
+        background:#fff;
+        box-shadow:0 4px 12px rgba(0,0,0,0.15);
+        text-align:center;
+    ">
+    <div id="qrContainer"></div>
+    <p id="linkTexto" style="word-wrap: break-word; font-size:16px; color:#333; margin-bottom:20px;"></p>
+    <div id="buttonsContainer" style="display:flex; justify-content:center; gap:10px; flex-wrap:wrap;">
+      <button id="descargarQR" style="background:#000; color:#fff; padding:10px 16px; border:none; border-radius:6px; cursor:pointer;">Descargar QR</button>
+      <button id="compartirWhatsApp" style="background:#000; color:#fff; padding:10px 16px; border:none; border-radius:6px; cursor:pointer;">Compartir WhatsApp</button>
+    </div>
+  </div>
+</div>
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycbyqRNtLDpy__ieJM0a0a3KIEIirzXCFLOOVe0h55gzBUNR7y4GyL_JUunfykyTgPfrZ/exec";
 
@@ -1118,9 +1150,57 @@ const todayStr = selectedDate.toLocaleDateString("fr-CA"); // yyyy-mm-dd sin UTC
   });
 });
 </script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
-  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script>
+function generarQR() {
+  const qrContainer = document.getElementById("qrContainer");
+  qrContainer.innerHTML = "";
+  const urlActual = window.location.href;
 
+  document.getElementById("linkTexto").textContent = urlActual;
+
+  new QRCode(qrContainer, {
+    text: urlActual,
+    width: 200,
+    height: 200,
+    colorDark: "#000000",
+    colorLight: "#ffffff",
+    correctLevel: QRCode.CorrectLevel.H
+  });
+}
+
+// Generar QR al cargar
+document.addEventListener("DOMContentLoaded", generarQR);
+
+// Descargar tarjeta (solo QR + link) centrada y nítida en PC y móvil
+document.getElementById("descargarQR").addEventListener("click", function() {
+  const card = document.getElementById("cardParaDescarga");
+  
+  html2canvas(card, { 
+    scale: 2,
+    width: card.offsetWidth,
+    windowWidth: card.scrollWidth,
+  }).then(canvas => {
+    const link = document.createElement("a");
+    link.href = canvas.toDataURL("image/png");
+    link.download = "turnox-qr.png";
+    link.click();
+  });
+});
+
+// WhatsApp solo comparte link clicable
+document.getElementById("compartirWhatsApp").addEventListener("click", function() {
+  const urlActual = window.location.href;
+  const texto = encodeURIComponent(`Autogestión de turno: ${urlActual}`);
+  window.open("https://wa.me/?text=" + texto, "_blank");
+});
+</script>
+  
  
 </body>
 </html>
+
+
+
