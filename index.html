@@ -7,26 +7,19 @@
 
   <!-- Fuentes -->
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Manifest PWA -->
   <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#000000">
-<script>
-  if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("sw.js")
-      .then(() => console.log("Service Worker registrado"))
-      .catch(err => console.error("Error registrando SW", err));
-  }
-</script>
-<link rel="apple-touch-icon" href="https://i.ibb.co/LD2Jbgnc/turnox-icon-512.png">
+  <meta name="theme-color" content="#533482">
+  <link rel="apple-touch-icon" href="https://i.ibb.co/LD2Jbgnc/turnox-icon-512.png">
+
   <!-- Iconos -->
   <link rel="icon" type="image/png" href="https://i.ibb.co/p6Ycq6XC/Turnox-logo.png">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
 
-  <!-- Open Graph para WhatsApp/Facebook -->
-  <meta property="og:title" content=">TurnoX - Sistema PRE-PAGO de Turnos On Line" />
+  <!-- Open Graph -->
+  <meta property="og:title" content="TurnoX - Sistema PRE-PAGO de Turnos On Line" />
   <meta property="og:description" content="Turnero Pro." />
   <meta property="og:image" content="https://i.ibb.co/p6Ycq6XC/Turnox-logo.png" />
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:height" content="630" />
   <meta property="og:url" content="https://turnox.pro/" />
   <meta property="og:type" content="website" />
 
@@ -35,86 +28,56 @@
   <meta name="twitter:title" content="TurnoX - Sistema PRE-PAGO de Turnos On Line" />
   <meta name="twitter:description" content="Turnero Pro." />
   <meta name="twitter:image" content="https://i.ibb.co/p6Ycq6XC/Turnox-logo.png" />
+
+  <!-- AOS CSS -->
+  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
   <style>
-    /* Reset y estilos generales */
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Montserrat", sans-serif;
+      background: #533482;
+      color: #fff;
+      line-height: 1.6;
+      overflow-x: hidden;
     }
 
-    html, body {
-      height: 100%;
-      font-family: "Montserrat", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 400;
-  font-style: normal;
-      background-color: #533482;
+    header {
+      min-height: 100vh;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
-       margin: 0;
-      min-height: 100vh; /* ocupa toda la pantalla */
-    transition: background-color 1s ease-in-out; /* transición suave del fondo */
-    }
-
-    /* Contenedor principal */
-    .container {
       text-align: center;
+      padding: 0 20px;
+      background: linear-gradient(135deg, #533482, #6d42a6, #8756c7);
+    }
+
+    .logo {
+      font-size: 3rem;
+      font-weight: 700;
+      margin-bottom: 10px;
       color: #fff;
+      position: relative;
+      display: inline-block;
+    }
+    .logo::before {
+      content: "TurnoX";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, transparent, rgba(255,255,255,0.9), transparent);
+      background-size: 200% 100%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shine 5s infinite linear;
+    }
+    @keyframes shine {
+      0%   { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
     }
 
-    
-.logo {
-  font-size: 3rem;
-      font-family: "Montserrat", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 700;
-  font-style: bold;
-      margin-bottom: -2px;
-      letter-spacing: -2px; /* valor negativo junta más las letras */
-  position: relative;
-  display: inline-block;
-  color: transparent;
-  }
-  .logo::before {
-    content: "TurnoX";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-      120deg,
-      transparent,
-      rgba(255,255,255,0.9),
-      transparent
-    );
-    background-size: 200% 100%;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: shine 5s infinite linear;
-  }
+    .subtitle { font-size: 1rem; margin-bottom: 40px; color: #ffffffcc; }
 
-@keyframes shine {
-  0%   { background-position: 200% 0; }   /* 👉 arranca a la derecha */
-  100% { background-position: -200% 0; }  /* 👉 termina a la izquierda */
-}
-
-  
-
-
-
-
-
-    .subtitle {
-      font-size: 0.9rem;
-      font-weight: 400;
-      margin-bottom: 40px;
-      color: #ffffffcc;
-    }
-
-    /* Botones */
     .btn {
       display: block;
       width: 250px;
@@ -130,54 +93,94 @@
       text-decoration: none;
       transition: background-color 0.3s, transform 0.2s;
     }
+    .btn:hover { background-color: #f2f2f2; transform: translateY(-2px); }
 
-    .btn:hover {
-      background-color: #f2f2f2;
-      transform: translateY(-2px);
+    section {
+      padding: 60px 20px;
+      max-width: 900px;
+      margin: auto;
+      text-align: center;
     }
-.btn .sub {
-  display: block;
-  font-size:8px;
-  font-weight: 400;
-  color: #CDCDCD; 
-  margin-top:1px;
-}
+    section h2 {
+      font-size: 1.8rem;
+      margin-bottom: 20px;
+      color: #fff;
+    }
+    section p {
+      font-size: 1rem;
+      margin-bottom: 15px;
+      color: #eee;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      background: #412866;
+      font-size: 0.9rem;
+      color: #ccc;
+    }
+
+    @media (max-width: 600px) {
+      .logo { font-size: 2.2rem; }
+      .btn { width: 90%; }
+      section h2 { font-size: 1.4rem; }
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="logo">TurnoX</div>
-    <div class="subtitle">www.turnox.pro</div>
+  <header>
+    <div class="logo" data-aos="fade-down">TurnoX</div>
+    <div class="subtitle" data-aos="fade-up">Sistema PRE-PAGO de Turnos Online</div>
 
-    <a href="/register" class="btn">
-  Crear Cuenta
-  <span class="sub"></span>
-</a>
-    <a href="/login" class="btn">Ya tengo una cuenta</a>
-     <a href="/ejemplo" class="btn">Ver Ejemplo</a>
-    <button id="instalarApp" class="btn">Descargá la App</button>
+    <a href="/register" class="btn" data-aos="zoom-in" data-aos-delay="100">Crear Cuenta</a>
+    <a href="/login" class="btn" data-aos="zoom-in" data-aos-delay="200">Ya tengo una cuenta</a>
+    <a href="/ejemplo" class="btn" data-aos="zoom-in" data-aos-delay="300">Ver Ejemplo</a>
+    <button id="instalarApp" class="btn" data-aos="zoom-in" data-aos-delay="400">Descargá la App</button>
+  </header>
 
-  </div>
+  <section data-aos="fade-up">
+    <h2>Cómo empezar</h2>
+    <p>1. Creá tu cuenta fácilmente en minutos.</p>
+    <p>2. Cargá créditos de manera segura.</p>
+    <p>3. Configurá tus turnos y servicios.</p>
+    <p>4. Personalizá la portada a tu estilo.</p>
+    <p>5. Visualizá y gestiona tus reservas desde cualquier dispositivo.</p>
+  </section>
 
-<script>
-  let deferredPrompt;
+  <section data-aos="fade-up" data-aos-delay="100">
+    <h2>¿Por qué elegir TurnoX?</h2>
+    <p>✔️ Simple, rápido y moderno.</p>
+    <p>✔️ Adaptado a celulares y PC.</p>
+    <p>✔️ Ideal para peluquerías, barberías, centros de estética y más.</p>
+  </section>
 
-  window.addEventListener("beforeinstallprompt", (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    document.getElementById("instalarApp").style.display = "block"; // mostrar botón
-  });
+  <footer>
+    <p>© 2025 TurnoX - Todos los derechos reservados</p>
+  </footer>
 
-  document.getElementById("instalarApp").addEventListener("click", async () => {
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      if (outcome === "accepted") {
-        console.log("Usuario instaló la app");
+  <!-- AOS JS -->
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script>
+    AOS.init({
+      duration: 800,
+      offset: 100,
+      once: true
+    });
+
+    // PWA instalar
+    let deferredPrompt;
+    window.addEventListener("beforeinstallprompt", (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      document.getElementById("instalarApp").style.display = "block";
+    });
+    document.getElementById("instalarApp").addEventListener("click", async () => {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        deferredPrompt = null;
       }
-      deferredPrompt = null;
-    }
-  });
-</script>
+    });
+  </script>
 </body>
 </html>
