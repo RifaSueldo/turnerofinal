@@ -4,183 +4,165 @@
   <meta charset="UTF-8" />
   <title>TurnoX - Sistema PRE-PAGO de Turnos On Line</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-
-  <!-- Fuentes -->
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-  <!-- Manifest PWA -->
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#533482">
-  <link rel="apple-touch-icon" href="https://i.ibb.co/LD2Jbgnc/turnox-icon-512.png">
 
   <!-- Iconos -->
+  <link rel="apple-touch-icon" href="https://i.ibb.co/LD2Jbgnc/turnox-icon-512.png">
   <link rel="icon" type="image/png" href="https://i.ibb.co/p6Ycq6XC/Turnox-logo.png">
 
-  <!-- Open Graph -->
-  <meta property="og:title" content="TurnoX - Sistema PRE-PAGO de Turnos On Line" />
-  <meta property="og:description" content="Turnero Pro." />
-  <meta property="og:image" content="https://i.ibb.co/p6Ycq6XC/Turnox-logo.png" />
-  <meta property="og:url" content="https://turnox.pro/" />
-  <meta property="og:type" content="website" />
-
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="TurnoX - Sistema PRE-PAGO de Turnos On Line" />
-  <meta name="twitter:description" content="Turnero Pro." />
-  <meta name="twitter:image" content="https://i.ibb.co/p6Ycq6XC/Turnox-logo.png" />
-
-  <!-- AOS CSS -->
-  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
-
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: "Montserrat", sans-serif;
-      background: #533482;
-      color: #fff;
-      line-height: 1.6;
-      overflow-x: hidden;
-    }
+    /* Reset y básicos */
+    * { box-sizing: border-box; margin:0; padding:0;}
+    body { font-family:"Montserrat",sans-serif; background:#533482; color:#fff; min-height:100vh; display:flex; flex-direction:column; align-items:center;}
+    h1,h2,h3,h4,p { margin-bottom:10px;}
+    a { text-decoration:none; }
 
-    header {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      padding: 0 20px;
-      background: linear-gradient(135deg, #533482, #6d42a6, #8756c7);
-    }
+    /* Contenedor general */
+    .container { max-width:900px; padding:20px; text-align:center; }
 
-    .logo {
-      font-size: 3rem;
-      font-weight: 700;
-      margin-bottom: 10px;
-      color: #fff;
-      position: relative;
-      display: inline-block;
-    }
+    /* Logo animado */
+    .logo { font-size:3rem; font-weight:700; color:transparent; position:relative; display:inline-block; margin-bottom:5px; }
     .logo::before {
-      content: "TurnoX";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(120deg, transparent, rgba(255,255,255,0.9), transparent);
-      background-size: 200% 100%;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: shine 5s infinite linear;
+      content:"TurnoX";
+      position:absolute; top:0; left:0; width:100%; height:100%;
+      background:linear-gradient(120deg,transparent,rgba(255,255,255,0.9),transparent);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      animation: shine 5s linear infinite;
     }
-    @keyframes shine {
-      0%   { background-position: 200% 0; }
-      100% { background-position: -200% 0; }
-    }
+    @keyframes shine {0%{background-position:200% 0;}100%{background-position:-200% 0;}}
 
-    .subtitle { font-size: 1rem; margin-bottom: 40px; color: #ffffffcc; }
+    .subtitle { font-size:1rem; color:#fff; margin-bottom:30px; }
 
-    .btn {
-      display: block;
-      width: 250px;
-      padding: 15px 0;
-      margin: 10px auto;
-      font-size: 1rem;
-      font-weight: 600;
-      color: #533482;
-      background-color: #fff;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      text-decoration: none;
-      transition: background-color 0.3s, transform 0.2s;
-    }
-    .btn:hover { background-color: #f2f2f2; transform: translateY(-2px); }
+    /* Botones */
+    .btn { display:block; width:250px; margin:10px auto; padding:15px 0; font-size:1rem; font-weight:600; color:#533482; background:#fff; border:none; border-radius:8px; cursor:pointer; transition:0.2s; }
+    .btn:hover { background:#f2f2f2; transform:translateY(-2px); }
+    .btn .sub { display:block; font-size:0.7rem; font-weight:400; color:#CDCDCD; margin-top:2px; }
 
-    section {
-      padding: 60px 20px;
-      max-width: 900px;
-      margin: auto;
-      text-align: center;
-    }
-    section h2 {
-      font-size: 1.8rem;
-      margin-bottom: 20px;
-      color: #fff;
-    }
-    section p {
-      font-size: 1rem;
-      margin-bottom: 15px;
-      color: #eee;
-    }
+    /* Secciones informativas */
+    section { opacity:0; transform:translateY(20px); transition:1s; margin:40px 0; border-radius:12px; padding:20px; background:rgba(255,255,255,0.05);}
+    section.visible { opacity:1; transform:translateY(0); }
+    section h2 { color:#fff; margin-bottom:10px; }
+    section p { color:#ddd; font-size:0.9rem; line-height:1.4; }
 
-    footer {
-      text-align: center;
-      padding: 20px;
-      background: #412866;
-      font-size: 0.9rem;
-      color: #ccc;
-    }
+    /* Imagenes de ejemplo */
+    .img-ex { width:100%; max-width:800px; margin:10px auto; border-radius:12px; display:block; }
 
-    @media (max-width: 600px) {
-      .logo { font-size: 2.2rem; }
-      .btn { width: 90%; }
-      section h2 { font-size: 1.4rem; }
+    /* Responsive */
+    @media(max-width:480px){
+      .btn { width:80%; font-size:0.9rem; padding:12px 0; }
+      .logo { font-size:2rem; }
+      section { padding:15px; }
     }
   </style>
 </head>
 <body>
-  <header>
-    <div class="logo" data-aos="fade-down">TurnoX</div>
-    <div class="subtitle" data-aos="fade-up">Sistema PRE-PAGO de Turnos Online</div>
+  <div class="container">
+    <div class="logo">TurnoX</div>
+    <div class="subtitle">Sistema PRE-PAGO de Turnos On Line</div>
 
-    <a href="/register" class="btn" data-aos="zoom-in" data-aos-delay="100">Crear Cuenta</a>
-    <a href="/login" class="btn" data-aos="zoom-in" data-aos-delay="200">Ya tengo una cuenta</a>
-    <a href="/ejemplo" class="btn" data-aos="zoom-in" data-aos-delay="300">Ver Ejemplo</a>
-    <button id="instalarApp" class="btn" data-aos="zoom-in" data-aos-delay="400">Descargá la App</button>
-  </header>
+    <a href="/register" class="btn">Crear Cuenta</a>
+    <a href="/login" class="btn">Ya tengo cuenta</a>
+    <a href="/ejemplo" class="btn">Ver Ejemplo</a>
+    <button id="instalarApp" class="btn">Descargá la App</button>
 
-  <section data-aos="fade-up">
-    <h2>Cómo empezar</h2>
-    <p>1. Creá tu cuenta fácilmente en minutos.</p>
-    <p>2. Cargá créditos de manera segura.</p>
-    <p>3. Configurá tus turnos y servicios.</p>
-    <p>4. Personalizá la portada a tu estilo.</p>
-    <p>5. Visualizá y gestiona tus reservas desde cualquier dispositivo.</p>
-  </section>
+    <!-- Secciones informativas -->
+    <section class="animate-on-scroll">
+      <h2>Cómo crear una cuenta</h2>
+      <p>Regístrate con tu email y contraseña para empezar a usar TurnoX.</p>
+    </section>
 
-  <section data-aos="fade-up" data-aos-delay="100">
-    <h2>¿Por qué elegir TurnoX?</h2>
-    <p>✔️ Simple, rápido y moderno.</p>
-    <p>✔️ Adaptado a celulares y PC.</p>
-    <p>✔️ Ideal para peluquerías, barberías, centros de estética y más.</p>
-  </section>
+    <section class="animate-on-scroll">
+      <h2>Cómo cargar créditos</h2>
+      <p>Compra créditos desde la sección “Créditos” para poder reservar turnos pre-pagos.</p>
+    </section>
 
-  <footer>
-    <p>© 2025 TurnoX - Todos los derechos reservados</p>
-  </footer>
+    <section class="animate-on-scroll">
+      <h2>Configurar tus turnos</h2>
+      <p>Desde “Configuración” define tus horarios, servicios y disponibilidad para tus clientes.</p>
+    </section>
 
-  <!-- AOS JS -->
-  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
-  <script>
-    AOS.init({
-      duration: 800,
-      offset: 100,
-      once: true
+    <section class="animate-on-scroll">
+      <h2>Cambiar la portada</h2>
+      <p>Personaliza tu portada con imágenes y colores que representen tu negocio.</p>
+    </section>
+
+    <section class="animate-on-scroll">
+      <h2>Visualizar turnos</h2>
+      <p>Consulta tus turnos y reservas desde la sección “Turnos” en cualquier momento.</p>
+    </section>
+
+    <section class="animate-on-scroll">
+      <h2>Accesos rápidos</h2>
+      <p>Utiliza los botones de arriba para registrar, iniciar sesión o ver ejemplos de turnos.</p>
+    </section>
+  </div>
+
+<script>
+  // Animación scroll
+  const animElements = document.querySelectorAll(".animate-on-scroll");
+  function checkScroll(){
+    const triggerBottom = window.innerHeight * 0.85;
+    animElements.forEach(el=>{
+      const top = el.getBoundingClientRect().top;
+      if(top < triggerBottom) el.classList.add("visible");
     });
+  }
+  window.addEventListener("scroll", checkScroll);
+  window.addEventListener("load", checkScroll);
 
-    // PWA instalar
-    let deferredPrompt;
-    window.addEventListener("beforeinstallprompt", (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-      document.getElementById("instalarApp").style.display = "block";
+  // PWA instalación
+  let deferredPrompt;
+  window.addEventListener("beforeinstallprompt", (e)=>{
+    e.preventDefault();
+    deferredPrompt = e;
+    document.getElementById("instalarApp").style.display="block";
+  });
+
+  document.getElementById("instalarApp").addEventListener("click", async ()=>{
+    if(deferredPrompt){
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if(outcome==="accepted") console.log("App instalada");
+      deferredPrompt=null;
+    }
+  });
+
+  // Service Worker con actualización automática
+  if("serviceWorker" in navigator){
+    navigator.serviceWorker.register("/sw.js").then(reg=>{
+      console.log("SW registrado");
+
+      reg.onupdatefound = ()=>{
+        const newWorker = reg.installing;
+        newWorker.onstatechange = ()=>{
+          if(newWorker.state==="installed"){
+            if(navigator.serviceWorker.controller){
+              const banner=document.createElement("div");
+              banner.style.position="fixed";
+              banner.style.bottom="20px";
+              banner.style.left="50%";
+              banner.style.transform="translateX(-50%)";
+              banner.style.background="#5F48D7";
+              banner.style.color="#fff";
+              banner.style.padding="12px 20px";
+              banner.style.borderRadius="12px";
+              banner.style.cursor="pointer";
+              banner.style.zIndex="9999";
+              banner.textContent="Nueva versión disponible, click para actualizar";
+              banner.onclick=()=>{
+                newWorker.postMessage({type:"SKIP_WAITING"});
+                window.location.reload();
+              };
+              document.body.appendChild(banner);
+            }
+          }
+        };
+      };
     });
-    document.getElementById("instalarApp").addEventListener("click", async () => {
-      if (deferredPrompt) {
-        deferredPrompt.prompt();
-        const { outcome } = await deferredPrompt.userChoice;
-        deferredPrompt = null;
-      }
-    });
-  </script>
+  }
+</script>
 </body>
 </html>
