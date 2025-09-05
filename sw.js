@@ -1,8 +1,8 @@
-// sw.js
+// =====================
+// Service Worker - TurnoX
+// =====================
 
-// Generamos un cache único usando timestamp para que siempre se renueve al subir cambios
-const CACHE_NAME = "turnox-cache-" + new Date().getTime();
-
+const CACHE_NAME = "turnox-cache-v3"; // Cambiar número de versión cuando actualices archivos
 const urlsToCache = [
   "/",
   "/index.html",
@@ -16,22 +16,25 @@ const urlsToCache = [
   "/main.js",
   "/favicon.ico",
   "/logo.png",
-  // agregá cualquier otro recurso que quieras cachear
+  // agregá cualquier JS, CSS o imagen que quieras cachear
 ];
 
-// ------------------ INSTALACIÓN ------------------
+// -------------------
+// INSTALL
+// -------------------
 self.addEventListener("install", event => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache))
   );
-  // activa el SW inmediatamente sin esperar
-  self.skipWaiting();
+  self.skipWaiting(); // activa SW inmediatamente
 });
 
-// ------------------ ACTIVACIÓN ------------------
+// -------------------
+// ACTIVATE
+// -------------------
 self.addEventListener("activate", event => {
   event.waitUntil(
-    caches.keys().then(keys =>
+    caches.keys().then(keys => 
       Promise.all(
         keys.map(key => {
           if (key !== CACHE_NAME) return caches.delete(key);
@@ -39,28 +42,30 @@ self.addEventListener("activate", event => {
       )
     )
   );
-  // toma control inmediato de todas las pestañas
-  self.clients.claim();
+  self.clients.claim(); // toma control inmediato
 });
 
-// ------------------ FETCH ------------------
+// -------------------
+// FETCH
+// -------------------
 self.addEventListener("fetch", event => {
+  if (event.request.method !== "GET") return; // solo cacheamos GET
+
   event.respondWith(
     caches.match(event.request).then(cachedResponse => {
       if (cachedResponse) return cachedResponse;
 
       return fetch(event.request)
         .then(networkResponse => {
-          // Clonamos la respuesta solo si es GET
-          if (event.request.method === "GET") {
-            caches.open(CACHE_NAME).then(cache => {
-              cache.put(event.request, networkResponse.clone());
-            });
-          }
+          // clonamos antes de cachear para evitar error "body already used"
+          const responseClone = networkResponse.clone();
+          caches.open(CACHE_NAME).then(cache => {
+            cache.put(event.request, responseClone);
+          });
           return networkResponse;
         })
         .catch(() => {
-          // fallback para documentos si no hay conexión
+          // fallback para páginas
           if (event.request.destination === "document") {
             return caches.match("/index.html");
           }
@@ -69,7 +74,9 @@ self.addEventListener("fetch", event => {
   );
 });
 
-// ------------------ MENSAJES ------------------
+// -------------------
+// FORZAR ACTUALIZACIÓN
+// -------------------
 self.addEventListener("message", event => {
   if (event.data && event.data.type === "SKIP_WAITING") {
     self.skipWaiting();
