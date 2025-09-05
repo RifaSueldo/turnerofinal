@@ -1174,35 +1174,50 @@ function mostrarFormReserva(profId, hora) {
   }; 
 } 
 
+// ------------------ LOADING ------------------
 function hideLoading() {
   const loading = document.getElementById("loadingScreen");
-  loading.style.opacity = 0;
-  setTimeout(() => loading.remove(), 500);
+  if (loading) {
+    loading.style.opacity = 0;
+    setTimeout(() => loading.remove(), 300);
+  }
 }
 
-// ------------------ INIT ------------------
-document.addEventListener("DOMContentLoaded", async () => {
-  // Cargar logo
-  await cargarLogo(username);
-
-  // Inicializamos selectedDate al día de hoy
+// ------------------ INICIALIZACIÓN ------------------
+async function init() {
+  // Arranca el calendario rápido
   selectedDate = new Date();
-
-  // Renderizamos calendario
   renderCalendario(selectedDate.getFullYear(), selectedDate.getMonth());
 
-  // Cargamos turnos del día actual
-  const todayStr = new Date().toISOString().split("T")[0]; // yyyy-mm-dd
-  await cargarTurnos(todayStr);
+  // Disparar logo y turnos en paralelo
+  const todayStr = new Date().toISOString().split("T")[0];
 
-  // Ocultar loading
-  hideLoading();
+  const promesas = [];
+  if (typeof cargarLogo === "function") promesas.push(cargarLogo(username));
+  if (typeof cargarTurnos === "function") promesas.push(cargarTurnos(todayStr));
 
-  // Si querés, bajar automáticamente a turnos
-  // const turnosDiv = document.getElementById("turnos");
-  // if (turnosDiv) turnosDiv.scrollIntoView({ behavior: "smooth" });
-});
+  // No esperamos todo para mostrar la interfaz, solo ocultamos loading cuando algo ya respondió
+  Promise.allSettled(promesas).then(() => hideLoading());
+}
 
+// ------------------ SERVICE WORKER ------------------
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("/sw.js").then(reg => {
+    console.log("SW registrado:", reg);
+    reg.addEventListener("updatefound", () => {
+      const newSW = reg.installing;
+      newSW.addEventListener("statechange", () => {
+        if (newSW.state === "installed" && navigator.serviceWorker.controller) {
+          newSW.postMessage({ type: "SKIP_WAITING" });
+          window.location.reload();
+        }
+      });
+    });
+  }).catch(err => console.error("Error SW:", err));
+}
+
+// ------------------ START ------------------
+document.addEventListener("DOMContentLoaded", init);
 </script>
  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
