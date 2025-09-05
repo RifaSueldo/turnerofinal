@@ -22,38 +22,3 @@ if ("serviceWorker" in navigator) {
   });
 }
 
-// ------------------ LOADING ------------------
-function hideLoading() {
-  const loading = document.getElementById("loadingScreen");
-  if (loading) {
-    loading.style.opacity = 0;
-    setTimeout(() => loading.remove(), 500);
-  }
-}
-
-// ------------------ INIT ------------------
-async function init() {
-  const loading = document.getElementById("loadingScreen");
-  if (loading) loading.style.display = "block";
-
-  // Inicializamos fecha
-  selectedDate = new Date();
-  if (typeof renderCalendario === "function") {
-    renderCalendario(selectedDate.getFullYear(), selectedDate.getMonth());
-  }
-
-  // Disparamos logo y turnos en paralelo
-  const tasks = [];
-  if (typeof cargarLogo === "function") {
-    tasks.push(cargarLogo(username));
-  }
-  if (typeof cargarTurnos === "function") {
-    const today = selectedDate.toISOString().split("T")[0];
-    tasks.push(cargarTurnos(today));
-  }
-
-  // Ocultar loading cuando ambas tareas terminan (o fallan)
-  Promise.allSettled(tasks).then(() => hideLoading());
-}
-
-document.addEventListener("DOMContentLoaded", init);
