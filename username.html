@@ -512,11 +512,54 @@ textarea::placeholder {
   color: #fff !important;
 }
 
-    
+ #loadingScreen {
+  position: fixed;
+  top:0; left:0; width:100%; height:100%;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  background:#fff;
+  z-index:9999;
+  transition: opacity 0.5s ease;
+}
+
+.loading-logo {
+  width:120px;
+  margin-bottom:20px;
+  animation: bounce 1s infinite alternate;
+}
+
+@keyframes bounce {
+  from { transform: translateY(0); }
+  to { transform: translateY(-10px); }
+}
+
+.spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #533482;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin-bottom:10px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+   
 </style>
 
 </head>
 <body>
+  <div id="loadingScreen">
+  <img src="https://i.ibb.co/p6Ycq6XC/Turnox-logo.png" alt="TurnoX" class="loading-logo">
+  <div class="spinner"></div>
+  <p>Cargando Sitio...</p>
+</div>
+
 <div class="grid">
   <div class="col down">
     <div class="rect filled"></div>
@@ -1131,10 +1174,16 @@ function mostrarFormReserva(profId, hora) {
   }; 
 } 
 
+function hideLoading() {
+  const loading = document.getElementById("loadingScreen");
+  loading.style.opacity = 0;
+  setTimeout(() => loading.remove(), 500);
+}
 
 // ------------------ INIT ------------------
-document.addEventListener("DOMContentLoaded", () => {
-  cargarLogo(username);
+document.addEventListener("DOMContentLoaded", async () => {
+  // Cargar logo
+  await cargarLogo(username);
 
   // Inicializamos selectedDate al día de hoy
   selectedDate = new Date();
@@ -1143,12 +1192,17 @@ document.addEventListener("DOMContentLoaded", () => {
   renderCalendario(selectedDate.getFullYear(), selectedDate.getMonth());
 
   // Cargamos turnos del día actual
-const todayStr = selectedDate.toLocaleDateString("fr-CA"); // yyyy-mm-dd sin UTC
-  cargarTurnos(todayStr).then(() => {
-    const turnosDiv = document.getElementById("turnos");
-    // if (turnosDiv) turnosDiv.scrollIntoView({ behavior: "smooth" });
-  });
+  const todayStr = new Date().toISOString().split("T")[0]; // yyyy-mm-dd
+  await cargarTurnos(todayStr);
+
+  // Ocultar loading
+  hideLoading();
+
+  // Si querés, bajar automáticamente a turnos
+  // const turnosDiv = document.getElementById("turnos");
+  // if (turnosDiv) turnosDiv.scrollIntoView({ behavior: "smooth" });
 });
+
 </script>
  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -1201,6 +1255,3 @@ document.getElementById("compartirWhatsApp").addEventListener("click", function(
  
 </body>
 </html>
-
-
-
