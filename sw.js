@@ -1,4 +1,4 @@
-const CACHE_NAME = "turnox-cache-v2";
+const CACHE_NAME = "turnox-cache-v3"; // nueva versión
 const urlsToCache = [
   "/",
   "/index.html",
@@ -12,10 +12,10 @@ const urlsToCache = [
   "/main.js",
   "/favicon.ico",
   "/logo.png",
-  // Agregá aquí cualquier JS, CSS o imagen que quieras cachear
+  // Agregá cualquier JS, CSS o imagen que quieras cachear
 ];
 
-// INSTALACIÓN
+// ------------------ INSTALL ------------------
 self.addEventListener("install", event => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache))
@@ -23,7 +23,7 @@ self.addEventListener("install", event => {
   self.skipWaiting(); // activa SW inmediatamente
 });
 
-// ACTIVACIÓN: eliminar caches viejos
+// ------------------ ACTIVATE ------------------
 self.addEventListener("activate", event => {
   event.waitUntil(
     caches.keys().then(keys => 
@@ -37,30 +37,30 @@ self.addEventListener("activate", event => {
   self.clients.claim(); // toma control inmediato
 });
 
-// FETCH: primero cache, luego red
+// ------------------ FETCH (network-first) ------------------
 self.addEventListener("fetch", event => {
-  event.respondWith(
-    caches.match(event.request).then(cachedResponse => {
-      if (cachedResponse) return cachedResponse;
+  if (event.request.method !== "GET") return;
 
-      return fetch(event.request).then(networkResponse => {
-        return caches.open(CACHE_NAME).then(cache => {
-          if (event.request.method === "GET") {
-            cache.put(event.request, networkResponse.clone());
-          }
-          return networkResponse;
+  event.respondWith(
+    fetch(event.request)
+      .then(networkResponse => {
+        // Guardar la nueva versión en cache
+        caches.open(CACHE_NAME).then(cache => cache.put(event.request, networkResponse.clone()));
+        return networkResponse;
+      })
+      .catch(() => {
+        // Si falla la red, usar cache
+        return caches.match(event.request).then(cachedResponse => {
+          if (cachedResponse) return cachedResponse;
+
+          // Fallback para documentos HTML
+          if (event.request.destination === "document") return caches.match("/index.html");
         });
-      }).catch(() => {
-        // fallback para páginas
-        if (event.request.destination === "document") {
-          return caches.match("/index.html");
-        }
-      });
-    })
+      })
   );
 });
 
-// ESCUCHAR mensaje para forzar actualización
+// ------------------ ESCUCHAR MENSAJE PARA FORZAR UPDATE ------------------
 self.addEventListener("message", event => {
   if (event.data && event.data.type === "SKIP_WAITING") {
     self.skipWaiting();
