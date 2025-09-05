@@ -21,6 +21,8 @@ if ("serviceWorker" in navigator) {
       .catch(err => console.error("Error SW:", err));
   });
 }
+
+// ------------------ LOADING ------------------
 function hideLoading() {
   const loading = document.getElementById("loadingScreen");
   if (loading) {
@@ -29,16 +31,29 @@ function hideLoading() {
   }
 }
 
+// ------------------ INIT ------------------
 async function init() {
   const loading = document.getElementById("loadingScreen");
   if (loading) loading.style.display = "block";
 
-  if (typeof cargarLogo === "function") await cargarLogo(username);
+  // Inicializamos fecha
   selectedDate = new Date();
-  if (typeof renderCalendario === "function") renderCalendario(selectedDate.getFullYear(), selectedDate.getMonth());
-  if (typeof cargarTurnos === "function") await cargarTurnos(selectedDate.toISOString().split("T")[0]);
+  if (typeof renderCalendario === "function") {
+    renderCalendario(selectedDate.getFullYear(), selectedDate.getMonth());
+  }
 
-  hideLoading();
+  // Disparamos logo y turnos en paralelo
+  const tasks = [];
+  if (typeof cargarLogo === "function") {
+    tasks.push(cargarLogo(username));
+  }
+  if (typeof cargarTurnos === "function") {
+    const today = selectedDate.toISOString().split("T")[0];
+    tasks.push(cargarTurnos(today));
+  }
+
+  // Ocultar loading cuando ambas tareas terminan (o fallan)
+  Promise.allSettled(tasks).then(() => hideLoading());
 }
 
 document.addEventListener("DOMContentLoaded", init);
