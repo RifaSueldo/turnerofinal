@@ -21,9 +21,6 @@ if ("serviceWorker" in navigator) {
       .catch(err => console.error("Error SW:", err));
   });
 }
-
-
-
 function hideLoading() {
   const loading = document.getElementById("loadingScreen");
   if (loading) {
