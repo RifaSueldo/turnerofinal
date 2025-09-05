@@ -11,7 +11,7 @@ const urlsToCache = [
   "/style.css",
   "/main.js",
   "/favicon.ico",
-  "/logo.png"
+  
 ];
 
 // INSTALACIÓN
