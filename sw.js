@@ -1,4 +1,4 @@
-const CACHE_NAME = "turnox-cache-v1"; // Cambia este número cuando quieras forzar actualización
+const CACHE_NAME = "turnox-cache-v2"; // Cambia este número cuando quieras forzar actualización
 const urlsToCache = [
   "/",
   "/index.html",
