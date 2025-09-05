@@ -1,4 +1,8 @@
-const CACHE_NAME = "turnox-cache-v3"; // nueva versión
+// sw.js
+
+// Generamos un cache único usando timestamp para que siempre se renueve al subir cambios
+const CACHE_NAME = "turnox-cache-" + new Date().getTime();
+
 const urlsToCache = [
   "/",
   "/index.html",
@@ -12,21 +16,22 @@ const urlsToCache = [
   "/main.js",
   "/favicon.ico",
   "/logo.png",
-  // Agregá cualquier JS, CSS o imagen que quieras cachear
+  // agregá cualquier otro recurso que quieras cachear
 ];
 
-// ------------------ INSTALL ------------------
+// ------------------ INSTALACIÓN ------------------
 self.addEventListener("install", event => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache))
   );
-  self.skipWaiting(); // activa SW inmediatamente
+  // activa el SW inmediatamente sin esperar
+  self.skipWaiting();
 });
 
-// ------------------ ACTIVATE ------------------
+// ------------------ ACTIVACIÓN ------------------
 self.addEventListener("activate", event => {
   event.waitUntil(
-    caches.keys().then(keys => 
+    caches.keys().then(keys =>
       Promise.all(
         keys.map(key => {
           if (key !== CACHE_NAME) return caches.delete(key);
@@ -34,33 +39,37 @@ self.addEventListener("activate", event => {
       )
     )
   );
-  self.clients.claim(); // toma control inmediato
+  // toma control inmediato de todas las pestañas
+  self.clients.claim();
 });
 
-// ------------------ FETCH (network-first) ------------------
+// ------------------ FETCH ------------------
 self.addEventListener("fetch", event => {
-  if (event.request.method !== "GET") return;
-
   event.respondWith(
-    fetch(event.request)
-      .then(networkResponse => {
-        // Guardar la nueva versión en cache
-        caches.open(CACHE_NAME).then(cache => cache.put(event.request, networkResponse.clone()));
-        return networkResponse;
-      })
-      .catch(() => {
-        // Si falla la red, usar cache
-        return caches.match(event.request).then(cachedResponse => {
-          if (cachedResponse) return cachedResponse;
+    caches.match(event.request).then(cachedResponse => {
+      if (cachedResponse) return cachedResponse;
 
-          // Fallback para documentos HTML
-          if (event.request.destination === "document") return caches.match("/index.html");
+      return fetch(event.request)
+        .then(networkResponse => {
+          // Clonamos la respuesta solo si es GET
+          if (event.request.method === "GET") {
+            caches.open(CACHE_NAME).then(cache => {
+              cache.put(event.request, networkResponse.clone());
+            });
+          }
+          return networkResponse;
+        })
+        .catch(() => {
+          // fallback para documentos si no hay conexión
+          if (event.request.destination === "document") {
+            return caches.match("/index.html");
+          }
         });
-      })
+    })
   );
 });
 
-// ------------------ ESCUCHAR MENSAJE PARA FORZAR UPDATE ------------------
+// ------------------ MENSAJES ------------------
 self.addEventListener("message", event => {
   if (event.data && event.data.type === "SKIP_WAITING") {
     self.skipWaiting();
