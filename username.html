@@ -715,8 +715,9 @@ let selectedHoras = []; // array de horas reservadas
 let selectedServicio = null; // servicio elegido
 
 
-// ------------------ CARGAR LOGO ------------------
-  async function cargarLogo(username) {
+
+ // ------------------ CARGAR LOGO ------------------
+async function cargarLogo(username) {
   try {
     // pedimos al backend los datos del perfil
     const res = await fetch(`${API_URL}?action=getPerfil&username=${username}`);
@@ -735,8 +736,13 @@ let selectedServicio = null; // servicio elegido
         logoUrl = `https://drive.google.com/uc?export=view&id=${fileId}`;
       }
 
+      // 🚀 Evitar logo cacheado
+      logoUrl = `${logoUrl}?v=${Date.now()}`;
+
       const logo = document.getElementById("userLogo");
-      logo.src = logoUrl;
+      if (logo) {
+        logo.src = logoUrl;
+      }
     } else {
       console.log("No se encontró perfil para", username);
     }
@@ -744,7 +750,6 @@ let selectedServicio = null; // servicio elegido
     console.log("Error cargando logo:", e);
   }
 }
-
 
 // ------------------ RENDER CALENDARIO ------------------
 function renderCalendario(year, month) {
