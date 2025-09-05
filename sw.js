@@ -1,8 +1,4 @@
-// =====================
-// Service Worker - TurnoX
-// =====================
-
-const CACHE_NAME = "turnox-cache-v3"; // Cambiar número de versión cuando actualices archivos
+const CACHE_NAME = "turnox-cache-v4"; // Cambia este número cuando quieras forzar actualización
 const urlsToCache = [
   "/",
   "/index.html",
@@ -15,13 +11,10 @@ const urlsToCache = [
   "/style.css",
   "/main.js",
   "/favicon.ico",
-  "/logo.png",
-  // agregá cualquier JS, CSS o imagen que quieras cachear
+  "/logo.png"
 ];
 
-// -------------------
-// INSTALL
-// -------------------
+// INSTALACIÓN
 self.addEventListener("install", event => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache))
@@ -29,12 +22,10 @@ self.addEventListener("install", event => {
   self.skipWaiting(); // activa SW inmediatamente
 });
 
-// -------------------
-// ACTIVATE
-// -------------------
+// ACTIVACIÓN: eliminar caches viejos
 self.addEventListener("activate", event => {
   event.waitUntil(
-    caches.keys().then(keys => 
+    caches.keys().then(keys =>
       Promise.all(
         keys.map(key => {
           if (key !== CACHE_NAME) return caches.delete(key);
@@ -45,38 +36,27 @@ self.addEventListener("activate", event => {
   self.clients.claim(); // toma control inmediato
 });
 
-// -------------------
-// FETCH
-// -------------------
+// FETCH: primero cache, luego red
 self.addEventListener("fetch", event => {
-  if (event.request.method !== "GET") return; // solo cacheamos GET
-
   event.respondWith(
     caches.match(event.request).then(cachedResponse => {
       if (cachedResponse) return cachedResponse;
 
-      return fetch(event.request)
-        .then(networkResponse => {
-          // clonamos antes de cachear para evitar error "body already used"
-          const responseClone = networkResponse.clone();
-          caches.open(CACHE_NAME).then(cache => {
-            cache.put(event.request, responseClone);
-          });
-          return networkResponse;
-        })
-        .catch(() => {
-          // fallback para páginas
-          if (event.request.destination === "document") {
-            return caches.match("/index.html");
-          }
+      return fetch(event.request).then(networkResponse => {
+        if (!networkResponse || networkResponse.status !== 200) return networkResponse;
+        const responseClone = networkResponse.clone();
+        caches.open(CACHE_NAME).then(cache => {
+          if (event.request.method === "GET") cache.put(event.request, responseClone);
         });
+        return networkResponse;
+      }).catch(() => {
+        if (event.request.destination === "document") return caches.match("/index.html");
+      });
     })
   );
 });
 
-// -------------------
-// FORZAR ACTUALIZACIÓN
-// -------------------
+// ESCUCHAR mensaje para forzar actualización
 self.addEventListener("message", event => {
   if (event.data && event.data.type === "SKIP_WAITING") {
     self.skipWaiting();
